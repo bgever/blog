@@ -5,5 +5,8 @@ author: Bart Verkoeijen
 summary: This is a test to see how Netlify CMS saves posts.
 tags:
   - post
+  - .net
+  - c#
+  - graphql
 ---
 I'm testing Netlify CMS to see how it saves posts in the Git repository.
