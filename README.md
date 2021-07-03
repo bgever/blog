@@ -1,6 +1,6 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/81eeb153-4ab3-410e-a6ca-0613ce6d4c3b/deploy-status)](https://app.netlify.com/sites/bgever/deploys)
 
-# Bart Verkoeijen’s weblog (bgever.com)
+# Bart Verkoeijen’s blog (bgever.com)
 
 ## License
 
