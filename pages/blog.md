@@ -1,8 +1,8 @@
 ---
 layout: layouts/blog.njk
 title: Blog
-metaDescription: A sample Blog page listing various posts and authors.
-date: 2017-01-01
+metaDescription: Bart Verkoeijen’s weblog on the internet.
+date: 2021-07-03
 permalink: /blog/index.html
 eleventyNavigation:
   key: Blog
