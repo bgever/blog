@@ -57,7 +57,7 @@ There are benefits of not keeping my thoughts to myself. It’s a vulnerable but
 
 ### Community engagement
 
-Software development is quite a solitary job. It is nice when I can reach out to other like minded people. Confirmation and constructive feedback can help everyone grow. Being a lone wolf doesn’t help. Opening up to others broadens my horizons.
+Software development is quite a solitary job. It is nice when I can reach out to other like-minded people. Confirmation and constructive feedback can help everyone grow. Being a lone wolf doesn’t help. Opening up to others broadens my horizons.
 
 In addition it will grow my professional network. It allows me to meet other inspirational people. Especially when I share my content on other professional social networks also.
 
@@ -67,4 +67,4 @@ And finally, after a while documenting the processes and problems and solutions 
 
 ___
 
-This should all be plenty of reasons to keep me motivated to persist with writing on this blog. Looking forward to the journey ahead, and thank you to join me for the ride.
+This should all be plenty of reasons to keep me motivated to persist with writing on this blog. Looking forward to the journey ahead, and thank you for joining me on the ride.
