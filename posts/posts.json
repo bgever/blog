@@ -1,7 +1,7 @@
 {
   "layout": "layouts/post.njk",
   "permalink": "{{ page.date | date: '%Y' }}/{{ title | slug }}/index.html",
-  "author": "Anonymous",
+  "author": "Bart Verkoeijen",
   "tags": [
     "post"
   ]
