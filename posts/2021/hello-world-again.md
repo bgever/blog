@@ -5,7 +5,7 @@ author: Bart Verkoeijen
 tags:
   - personal
 metaDescription: Motivations for why I started blogging again
-summary: A few weeks ago I saw my very first website again, thanks to the good folks at the Internet Archive. It sparked nostalgia and it also reminded me on how much fun I had publishing to the web. That got me thinking.
+summary: A few weeks ago I saw my very first website again, thanks to the good folks at the Internet Archive. It sparked nostalgia and it also reminded me on how much fun I had publishing to the web. That got me thinking, I should get back to blogging again.
 ---
 
 A few weeks ago I saw my very first website again, thanks to the good folks at the Internet Archive. It sparked nostalgia and it also reminded me on how much fun I had publishing to the web. That got me thinking.
