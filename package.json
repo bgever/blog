@@ -2,12 +2,8 @@
   "name": "bgever-blog",
   "description": "Personal blog of Bart Verkoeijen",
   "private": true,
-  "version": "1.0.4",
+  "version": "2.0.0",
   "scripts": {
-    "build": "npx eleventy",
-    "watch": "npx eleventy --watch",
-    "serve": "npx eleventy --serve",
-    "debug": "DEBUG=* npx eleventy"
   },
   "repository": {
     "type": "git",
@@ -24,15 +20,7 @@
   "homepage": "https://github.com/bgever/blog",
   "license": "MIT",
   "devDependencies": {
-    "@11ty/eleventy": "^0.12.1",
-    "luxon": "^1.25.0",
-    "markdown-it": "^12.1.0",
-    "markdown-it-anchor": "^8.1.0"
   },
   "dependencies": {
-    "@11ty/eleventy-navigation": "^0.3.2",
-    "clean-css": "^5.1.3",
-    "html-minifier": "^4.0.0",
-    "uglify-es": "^3.3.9"
   }
 }

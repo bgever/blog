@@ -10,8 +10,7 @@ All content by Bart Verkoeijen and under [Creative Commons][content-license] and
 
 > MIT License
 >
-> Copyright (c) 2021 Bart Verkoeijen  
-> Copyright (c) 2018 Dan Urbanowicz
+> Copyright (c) 2025 Bart Verkoeijen
 >
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
@@ -32,53 +31,3 @@ All content by Bart Verkoeijen and under [Creative Commons][content-license] and
 > SOFTWARE.
 
 ## Local development
-
-### 1. Clone this repository
-
-```
-git clone https://github.com/danurbanowicz/eleventy-netlify-boilerplate.git my-blog-name
-```
-
-### 2. Navigate to the directory
-
-```
-cd my-blog-name
-```
-
-Specifically have a look at `.eleventy.js` to see if you want to configure any Eleventy options differently.
-
-### 3. Install dependencies locally
-
-```
-npm install @11ty/eleventy
-```
-
-### 4. Edit _data/metadata.json
-
-This file contains your site title and author details, and can be used to store any other commonly used site data.
-
-### 5. Run Eleventy (builds the site)
-
-```
-npx @11ty/eleventy
-```
-
-Or build automatically when a template changes:
-```
-npx @11ty/eleventy --watch
-```
-
-Or build and host locally for local development:
-```
-npx @11ty/eleventy --serve
-```
-
-Or in debug mode:
-```
-DEBUG=* npx @11ty/eleventy
-```
-
-## Template reference
-
-This repo builds upon Dan Urbanowicz’s excellent template:
-https://github.com/danurbanowicz/eleventy-netlify-boilerplate
