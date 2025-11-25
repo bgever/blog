@@ -30,4 +30,31 @@ All content by Bart Verkoeijen and under [Creative Commons][content-license] and
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
 
-## Local development
+## Developing
+
+Ensure dependencies have been installed.
+
+```sh
+pnpm install
+```
+
+Start a development server:
+
+```sh
+pnpm dev
+
+# or start the server and open the app in a new browser tab
+pnpm dev --open
+```
+
+## Building
+
+To create a production version:
+
+```sh
+pnpm build
+```
+
+Preview the production build with `pnpm preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
