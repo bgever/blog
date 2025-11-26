@@ -10,7 +10,7 @@ image: https://images.unsplash.com/photo-1519404047982-9247c4b2c7d5?ixlib=rb-1.2
 ---
 
 <script>
-import MetaHeader from "$lib/ui/MetaHeader.svelte";
+import { MetaHeader } from "$lib/ui";
 </script>
 
 This is the second post.
