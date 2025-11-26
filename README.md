@@ -30,6 +30,9 @@ All content by Bart Verkoeijen and under [Creative Commons][content-license] and
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
 
+The website is based on the [Spotlight template from Tailwind Plus](https://tailwindcss.com/plus/templates/spotlight).
+Purchase your own license if you want to use it on your website. Refer to `LICENSE.md` for details.
+
 ## Developing
 
 Ensure dependencies have been installed.
