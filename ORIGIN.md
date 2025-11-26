@@ -88,3 +88,5 @@ Images copied from the template:
 - Mobile menu click-through - Original used Headless UI `Popover` which handles
   focus trapping and click-outside. Fixed by wrapping backdrop and panel in a
   `fixed inset-0 z-50 pointer-events-auto` container in `MobileNav.svelte`
+- Theme store warning - Fixed `state_referenced_locally` warning by extracting initial theme
+  to a constant before creating `$state`, avoiding capturing reactive state by value in `theme.svelte.ts`

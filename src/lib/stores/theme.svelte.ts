@@ -18,7 +18,8 @@ function createThemeStore() {
 		return 'light';
 	};
 
-	let current = $state<Theme>(getInitialTheme());
+	const initialTheme = getInitialTheme();
+	let current = $state<Theme>(initialTheme);
 
 	function applyTheme(value: Theme) {
 		if (browser) {
@@ -29,7 +30,7 @@ function createThemeStore() {
 
 	// Apply initial theme on load
 	if (browser) {
-		applyTheme(current);
+		applyTheme(initialTheme);
 	}
 
 	return {
