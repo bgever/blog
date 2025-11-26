@@ -18,7 +18,7 @@
 	<meta name="theme-color" content={theme.current === 'dark' ? '#18181b' : '#ffffff'} />
 </svelte:head>
 
-<div class="min-h-full bg-zinc-50 dark:bg-black">
+<div class="min-h-screen bg-zinc-50 dark:bg-black">
 	<Layout>
 		{@render children()}
 	</Layout>

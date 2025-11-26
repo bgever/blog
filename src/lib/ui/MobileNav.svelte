@@ -44,47 +44,50 @@
 </div>
 
 {#if isOpen}
-	<!-- Backdrop -->
-	<!-- svelte-ignore a11y_click_events_have_key_events -->
-	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div
-		class="fixed inset-0 z-50 bg-zinc-800/40 backdrop-blur-xs dark:bg-black/80"
-		transition:fade={{ duration: 150 }}
-		onclick={close}
-	></div>
+	<!-- Portal container - fixed positioning takes it out of the header's stacking context -->
+	<div class="fixed inset-0 z-50 pointer-events-auto">
+		<!-- Backdrop -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div
+			class="fixed inset-0 bg-zinc-800/40 backdrop-blur-xs dark:bg-black/80"
+			transition:fade={{ duration: 150 }}
+			onclick={close}
+		></div>
 
-	<!-- Panel -->
-	<div
-		class="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800"
-		transition:scale={{ duration: 150, start: 0.95 }}
-	>
-		<div class="flex flex-row-reverse items-center justify-between">
-			<button type="button" aria-label="Close menu" class="-m-1 p-1" onclick={close}>
-				<svg viewBox="0 0 24 24" aria-hidden="true" class="h-6 w-6 text-zinc-500 dark:text-zinc-400">
-					<path
-						d="m17.25 6.75-10.5 10.5M6.75 6.75l10.5 10.5"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.5"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-				</svg>
-			</button>
-			<h2 class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Navigation</h2>
+		<!-- Panel -->
+		<div
+			class="fixed inset-x-4 top-8 origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:ring-zinc-800"
+			transition:scale={{ duration: 150, start: 0.95 }}
+		>
+			<div class="flex flex-row-reverse items-center justify-between">
+				<button type="button" aria-label="Close menu" class="-m-1 p-1" onclick={close}>
+					<svg viewBox="0 0 24 24" aria-hidden="true" class="h-6 w-6 text-zinc-500 dark:text-zinc-400">
+						<path
+							d="m17.25 6.75-10.5 10.5M6.75 6.75l10.5 10.5"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</button>
+				<h2 class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Navigation</h2>
+			</div>
+			<nav class="mt-6">
+				<ul
+					class="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300"
+				>
+					{#each navLinks as link}
+						<li>
+							<a href={link.href} class="block py-2" onclick={close}>
+								{link.label}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</nav>
 		</div>
-		<nav class="mt-6">
-			<ul
-				class="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300"
-			>
-				{#each navLinks as link}
-					<li>
-						<a href={link.href} class="block py-2" onclick={close}>
-							{link.label}
-						</a>
-					</li>
-				{/each}
-			</ul>
-		</nav>
 	</div>
 {/if}

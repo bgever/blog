@@ -20,13 +20,17 @@ function createThemeStore() {
 
 	let current = $state<Theme>(getInitialTheme());
 
-	// Sync to localStorage and DOM when theme changes
-	$effect(() => {
+	function applyTheme(value: Theme) {
 		if (browser) {
-			localStorage.setItem('theme', current);
-			document.documentElement.classList.toggle('dark', current === 'dark');
+			localStorage.setItem('theme', value);
+			document.documentElement.classList.toggle('dark', value === 'dark');
 		}
-	});
+	}
+
+	// Apply initial theme on load
+	if (browser) {
+		applyTheme(current);
+	}
 
 	return {
 		get current() {
@@ -34,9 +38,12 @@ function createThemeStore() {
 		},
 		set current(value: Theme) {
 			current = value;
+			applyTheme(value);
 		},
 		toggle() {
-			current = current === 'dark' ? 'light' : 'dark';
+			const newTheme = current === 'dark' ? 'light' : 'dark';
+			current = newTheme;
+			applyTheme(newTheme);
 		}
 	};
 }

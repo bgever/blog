@@ -76,3 +76,15 @@ Images copied from the template:
 
 - `clsx` - Conditional class name utility
 - `@tailwindcss/typography` - Prose styling plugin
+
+## Post-migration Fixes
+
+- Replaced curly apostrophes with straight quotes in `uses/+page.svelte`
+- Fixed `@screen lg` syntax to `@media (min-width: 1024px)` in typography config
+- Background stretch - Changed `min-h-full` to `min-h-screen` in `+layout.svelte`
+- Back button - Replaced `<button onclick={goBack}>` with `<a href="/blog">` in `ArticleLayout.svelte`
+- Dark mode toggle - Moved DOM update logic from `$effect` into a direct `applyTheme()` function called
+  in toggle/setter in `theme.svelte.ts`
+- Mobile menu click-through - Original used Headless UI `Popover` which handles
+  focus trapping and click-outside. Fixed by wrapping backdrop and panel in a
+  `fixed inset-0 z-50 pointer-events-auto` container in `MobileNav.svelte`
