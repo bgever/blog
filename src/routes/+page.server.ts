@@ -15,10 +15,10 @@ type Post = {
 	date?: string;
 };
 
-const modules = import.meta.glob('/posts/**/*.{md,mdx,svx}', { eager: true });
+const modules = import.meta.glob('/posts/**/*.{md,md.svelte}', { eager: true });
 
 const allPosts: Post[] = Object.entries(modules).flatMap(([path, mod]) => {
-	const match = /\/posts\/(\d{4})\/([^/]+)\.(md|mdx|svx)$/.exec(path);
+	const match = /\/posts\/(\d{4})\/([^/]+)\.(md(\.svelte)?)$/.exec(path);
 	if (!match) return [];
 
 	const [, year, slug] = match;

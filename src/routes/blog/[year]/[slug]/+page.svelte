@@ -2,7 +2,7 @@
 	import type { Component } from 'svelte';
 	import type { PageProps } from './$types';
 
-	const modules = import.meta.glob('/posts/**/*.{md,mdx,svx}', { eager: true });
+	const modules = import.meta.glob('/posts/**/*.{md,md.svelte}', { eager: true });
 
 	let { data }: PageProps = $props();
 

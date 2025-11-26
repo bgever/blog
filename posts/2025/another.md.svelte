@@ -1,5 +1,5 @@
 ---
-title: Another pot
+title: Another post
 date: 2025-11-25T16:27:11.233Z
 author: Bart Verkoeijen
 tags:
