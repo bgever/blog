@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
+	import { SimpleLayout, Button } from '$lib/ui';
 
 	// Form data state
 	let formData = $state({
@@ -90,23 +91,30 @@
 	// Email validation pattern from Eleventy form
 	const emailPattern =
 		'^([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22([^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22)(\\x2e([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22([^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22))*\\x40([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b([^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d)(\\x2e([^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b([^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d))*(\\x2e\\w{2,})+$';
+
+	const inputStyles =
+		'w-full appearance-none rounded-md bg-white px-4 py-3 shadow-md shadow-zinc-800/5 outline outline-zinc-900/10 placeholder:text-zinc-400 focus:ring-4 focus:ring-teal-500/10 focus:outline-teal-500 sm:text-sm dark:bg-zinc-700/15 dark:text-zinc-200 dark:outline-zinc-700 dark:placeholder:text-zinc-500 dark:focus:ring-teal-400/10 dark:focus:outline-teal-400';
+	const errorInputStyles = 'outline-red-500 dark:outline-red-500';
 </script>
 
 <svelte:head>
-	<title>Contact - Bart Verkoeijen's blog</title>
+	<title>Contact - Bart Verkoeijen</title>
 	<meta name="description" content="Get in touch with Bart Verkoeijen" />
 </svelte:head>
 
-<main class="max-w-2xl mx-auto px-4 py-8">
-	<h1 class="text-4xl font-bold mb-8">Contact</h1>
-
+<SimpleLayout
+	title="Get in touch"
+	intro="Have a question or want to work together? Drop me a message and I'll get back to you as soon as possible."
+>
 	{#if showSuccess}
 		<div
-			class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6"
+			class="rounded-2xl border border-teal-500/20 bg-teal-50 p-6 dark:border-teal-400/20 dark:bg-teal-400/5"
 			role="alert"
 		>
-			<p class="font-bold">Success!</p>
-			<p>Thank you for your message. I'll get back to you soon.</p>
+			<h2 class="text-sm font-semibold text-teal-900 dark:text-teal-200">Message sent!</h2>
+			<p class="mt-2 text-sm text-teal-700 dark:text-teal-300">
+				Thank you for your message. I'll get back to you soon.
+			</p>
 		</div>
 	{/if}
 
@@ -116,7 +124,7 @@
 		data-netlify="true"
 		data-netlify-honeypot="bot-field"
 		onsubmit={handleSubmit}
-		class="space-y-6"
+		class="mt-10 space-y-6"
 	>
 		<!-- Hidden fields required by Netlify -->
 		<input type="hidden" name="form-name" value="contact" />
@@ -124,50 +132,54 @@
 
 		<!-- Name field -->
 		<div>
-			<label for="name" class="block text-sm font-medium mb-2">Name</label>
-			<input
-				type="text"
-				id="name"
-				name="name"
-				bind:value={formData.name}
-				onblur={() => handleBlur('name')}
-				oninput={() => handleInput('name')}
-				required
-				autocomplete="name"
-				placeholder="Your name"
-				title="Please enter your name"
-				class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {touched.name &&
-				!formData.name.trim()
-					? 'border-red-500'
-					: ''}"
-			/>
+			<label for="name" class="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
+				Name
+			</label>
+			<div class="mt-2">
+				<input
+					type="text"
+					id="name"
+					name="name"
+					bind:value={formData.name}
+					onblur={() => handleBlur('name')}
+					oninput={() => handleInput('name')}
+					required
+					autocomplete="name"
+					placeholder="Your name"
+					title="Please enter your name"
+					class="{inputStyles} {touched.name && !formData.name.trim() ? errorInputStyles : ''}"
+				/>
+			</div>
 			{#if touched.name && !formData.name.trim()}
-				<p class="mt-1 text-sm text-red-600" id="name-error">Please enter your name</p>
+				<p class="mt-2 text-sm text-red-600 dark:text-red-400" id="name-error">
+					Please enter your name
+				</p>
 			{/if}
 		</div>
 
 		<!-- Email field -->
 		<div>
-			<label for="email" class="block text-sm font-medium mb-2">Email</label>
-			<input
-				type="email"
-				id="email"
-				name="email"
-				bind:value={formData.email}
-				onblur={() => handleBlur('email')}
-				oninput={() => handleInput('email')}
-				required
-				autocomplete="email"
-				placeholder="your@email.com"
-				pattern={emailPattern}
-				title="The domain portion of the email address is invalid (the portion after the @)."
-				class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {touched.email &&
-				!emailValid
-					? 'border-red-500'
-					: ''}"
-			/>
+			<label for="email" class="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
+				Email
+			</label>
+			<div class="mt-2">
+				<input
+					type="email"
+					id="email"
+					name="email"
+					bind:value={formData.email}
+					onblur={() => handleBlur('email')}
+					oninput={() => handleInput('email')}
+					required
+					autocomplete="email"
+					placeholder="your@email.com"
+					pattern={emailPattern}
+					title="The domain portion of the email address is invalid (the portion after the @)."
+					class="{inputStyles} {touched.email && !emailValid ? errorInputStyles : ''}"
+				/>
+			</div>
 			{#if touched.email && !emailValid}
-				<p class="mt-1 text-sm text-red-600" id="email-error">
+				<p class="mt-2 text-sm text-red-600 dark:text-red-400" id="email-error">
 					Please enter a valid email address
 				</p>
 			{/if}
@@ -175,33 +187,36 @@
 
 		<!-- Message field -->
 		<div>
-			<label for="message" class="block text-sm font-medium mb-2">Message</label>
-			<textarea
-				id="message"
-				name="message"
-				bind:value={formData.message}
-				onblur={() => handleBlur('message')}
-				oninput={() => handleInput('message')}
-				required
-				rows="7"
-				placeholder="Write your message here"
-				class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {touched.message &&
-				!formData.message.trim()
-					? 'border-red-500'
-					: ''}"
-			></textarea>
+			<label for="message" class="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
+				Message
+			</label>
+			<div class="mt-2">
+				<textarea
+					id="message"
+					name="message"
+					bind:value={formData.message}
+					onblur={() => handleBlur('message')}
+					oninput={() => handleInput('message')}
+					required
+					rows="7"
+					placeholder="Write your message here"
+					class="{inputStyles} resize-none {touched.message && !formData.message.trim()
+						? errorInputStyles
+						: ''}"
+				></textarea>
+			</div>
 			{#if touched.message && !formData.message.trim()}
-				<p class="mt-1 text-sm text-red-600" id="message-error">Please enter a message</p>
+				<p class="mt-2 text-sm text-red-600 dark:text-red-400" id="message-error">
+					Please enter a message
+				</p>
 			{/if}
 		</div>
 
 		<!-- Submit button -->
-		<button
-			type="submit"
-			disabled={submitting || !formValid}
-			class="w-full bg-blue-600 text-white px-6 py-3 rounded font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-		>
-			{submitting ? 'Sending...' : 'Send Message'}
-		</button>
+		<div>
+			<Button type="submit" disabled={submitting || !formValid} class="w-full">
+				{submitting ? 'Sending...' : 'Send Message'}
+			</Button>
+		</div>
 	</form>
-</main>
+</SimpleLayout>

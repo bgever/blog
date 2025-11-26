@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import { getPostModule } from '$lib';
+	import { ArticleLayout } from '$lib/ui';
 
 	let { data }: PageProps = $props();
 
@@ -20,11 +21,10 @@
 </script>
 
 <svelte:head>
-	<title>{title}</title>
+	<title>{title} - Bart Verkoeijen</title>
 	{#if description}<meta name="description" content={description} />{/if}
 </svelte:head>
 
-<article>
-	<h1>{post.title}</h1>
+<ArticleLayout {title} date={post.date || ''}>
 	<Post />
-</article>
+</ArticleLayout>

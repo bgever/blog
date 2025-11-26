@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types';
-import { getLatestPosts } from '$lib';
+import { getAllPosts } from '$lib';
 
 export const load: PageServerLoad = async () => ({
-	posts: getLatestPosts(4)
+	posts: getAllPosts()
 });
 
 export const prerender = true;
