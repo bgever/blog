@@ -5,6 +5,7 @@
 - SvelteKit 2 (Svelte 5)
 - Production hosting with static rendered website on Netlify.
 - Local content editing with <https://frontmatter.codes> plugin in VSCode.
+- PNPM
 
 ## Available MCP Tools
 

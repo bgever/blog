@@ -1,25 +1,22 @@
 <script lang="ts">
-	import type { Component } from 'svelte';
 	import type { PageProps } from './$types';
-
-	const modules = import.meta.glob('/posts/**/*.{md,md.svelte}', { eager: true });
+	import { getPostModule } from '$lib';
 
 	let { data }: PageProps = $props();
 
-	const postModule = modules[data.postPath];
+	const postData = getPostModule(data.post.year, data.post.slug);
 
-	if (!postModule) {
-		throw new Error(`Post component missing for ${data.postPath}`);
+	if (!postData) {
+		throw new Error(`Post component missing for ${data.post.href}`);
 	}
 
-	const { default: Post } = postModule as { default: Component };
-	const metadata = (data.metadata ?? {}) as Record<string, unknown>;
+	const { module } = postData;
+	const { default: Post } = module;
+	const { post } = data;
 
-	const title = (metadata.title as string | undefined) ?? `${data.slug} – ${data.year}`;
+	const title = post.title;
 	const description =
-		(metadata.metaDescription as string | undefined) ??
-		(metadata.description as string | undefined) ??
-		(metadata.summary as string | undefined);
+		post.metadata.metaDescription ?? post.metadata.description ?? post.summary;
 </script>
 
 <svelte:head>
@@ -28,6 +25,6 @@
 </svelte:head>
 
 <article>
-	<h1>{(metadata.title as string | undefined) ?? data.slug}</h1>
+	<h1>{post.title}</h1>
 	<Post />
 </article>
