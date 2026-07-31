@@ -3,6 +3,7 @@ import {
   byDateDesc,
   extractExcerpt,
   normaliseDate,
+  normalisePostUrl,
   validateFrontmatter,
   type Post,
 } from './lib/posts'
@@ -20,7 +21,9 @@ export default createContentLoader('posts/**/*.md', {
     const posts = raw.map((page) => {
       const fm = validateFrontmatter(page.url, page.frontmatter)
       return {
-        url: page.url,
+        // The loader does not apply `rewrites`, so its URLs still carry the
+        // /posts/ prefix that the served routes do not have.
+        url: normalisePostUrl(page.url),
         title: fm.title,
         description: fm.description,
         date: fm.date,

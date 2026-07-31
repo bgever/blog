@@ -64,10 +64,12 @@ export function headForPage(pageData: PageData): HeadConfig[] {
     head.push(['meta', { property: 'og:image:alt', content: fm.coverAlt }])
   }
 
+  // `<` is escaped so frontmatter text can never terminate the script element
+  // early (`</script>` inside a JSON string would otherwise break out of it).
   head.push([
     'script',
     { type: 'application/ld+json' },
-    JSON.stringify(jsonLd(pageData, url, image)),
+    JSON.stringify(jsonLd(pageData, url, image)).replace(/</g, '\\u003c'),
   ])
 
   return head

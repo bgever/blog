@@ -2,10 +2,25 @@ import { defineConfig } from 'vitepress'
 import { SITE } from './site'
 import { headForPage, isPostPage } from './head'
 import { writeFeed } from './rss'
+import { readPosts } from './lib/read-posts'
+
+/**
+ * Filtering drafts out of the content loader hides them from listings and
+ * RSS, but VitePress still renders every .md under src as a page — so without
+ * this a draft would ship at its real URL (and in the sitemap) in production.
+ * Excluding the source files is the only thing that truly unpublishes them.
+ */
+const draftSources =
+  process.env.NODE_ENV === 'production'
+    ? readPosts()
+        .filter((p) => p.frontmatter.draft === true)
+        .map((p) => p.relativePath)
+    : []
 
 export default defineConfig({
   srcDir: 'src',
   outDir: 'dist',
+  srcExclude: draftSources,
   cleanUrls: true,
   appearance: true,
   lang: SITE.lang,

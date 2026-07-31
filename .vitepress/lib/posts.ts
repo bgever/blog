@@ -98,6 +98,17 @@ export function normaliseDate(value: unknown): string | null {
   return parsed.toISOString().slice(0, 10)
 }
 
+/**
+ * `createContentLoader` builds page URLs from source paths WITHOUT applying
+ * the `rewrites` from config.ts, so a loader URL arrives as
+ * `/posts/2021/hello-world-again` while the page is actually served at
+ * `/2021/hello-world-again`. Every listing link must pass through this or it
+ * 404s in production.
+ */
+export function normalisePostUrl(loaderUrl: string): string {
+  return loaderUrl.replace(/^\/posts\//, '/')
+}
+
 /** `personal` -> `personal`, `Web Dev` -> `web-dev`. Used for /tags/:slug URLs. */
 export function tagSlug(tag: string): string {
   return tag

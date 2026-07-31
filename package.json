@@ -8,6 +8,13 @@
   "engines": {
     "node": ">=24"
   },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
+  },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "vitepress dev",

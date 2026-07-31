@@ -4,6 +4,7 @@ import {
   extractExcerpt,
   formatDate,
   normaliseDate,
+  normalisePostUrl,
   tagSlug,
   validateFrontmatter,
   type Post,
@@ -109,6 +110,19 @@ describe('byDateDesc', () => {
       { date: '2026-01-01', title: 'new' },
     ] as Post[]
     expect([...posts].sort(byDateDesc)[0]?.title).toBe('new')
+  })
+})
+
+describe('normalisePostUrl', () => {
+  // createContentLoader does not apply the config's `rewrites`, so loader URLs
+  // carry a /posts/ prefix that the served routes do not. Regression guard for
+  // the bug where every listing link pointed at a 404ing /posts/... URL.
+  it.each([
+    ['/posts/2021/hello-world-again', '/2021/hello-world-again'],
+    ['/posts/2026/some-post', '/2026/some-post'],
+    ['/2021/already-normalised', '/2021/already-normalised'],
+  ])('maps %s to %s', (input, expected) => {
+    expect(normalisePostUrl(input)).toBe(expected)
   })
 })
 
