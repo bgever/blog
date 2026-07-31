@@ -1,0 +1,51 @@
+{
+  "name": "bgever-blog",
+  "description": "Personal blog of Bart Verkoeijen",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "new-post": "node --experimental-strip-types scripts/new-post.ts",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "deploy": "pnpm build && wrangler deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bgever/blog"
+  },
+  "author": {
+    "name": "Bart Verkoeijen",
+    "url": "https://bgever.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/bgever/blog/issues"
+  },
+  "homepage": "https://bgever.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^24.0.0",
+    "feed": "^5.1.0",
+    "gray-matter": "^4.0.3",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "tailwindcss": "^4.1.14",
+    "typescript": "^5.7.3",
+    "vitepress": "^1.6.4",
+    "vitest": "^3.0.5",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.0",
+    "wrangler": "^3.107.0"
+  }
+}
