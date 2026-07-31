@@ -4,6 +4,16 @@ title: About
 description: About Bart Verkoeijen — a Dutch software engineer and entrepreneur living in Hong Kong.
 ---
 
+<!-- The source photo is 620x620; displaying at 310 CSS px keeps it crisp
+     at 2x on hidpi screens instead of stretching 1:1. -->
+
+<img
+  src="/avatar-full.jpg"
+  width="310"
+  height="310"
+  alt="Bart Verkoeijen, smiling, in front of a house plant"
+/>
+
 Hi, I’m Bart Verkoeijen — a software engineer and entrepreneur from the Netherlands, living in
 Hong Kong.
 
