@@ -1,8 +1,0 @@
-{
-  "layout": "layouts/post.njk",
-  "permalink": "{{ page.date | date: '%Y' }}/{{ title | slug }}/index.html",
-  "author": "Bart Verkoeijen",
-  "tags": [
-    "post"
-  ]
-}
