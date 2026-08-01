@@ -126,15 +126,22 @@ there looks correct and changes nothing. Two settings matter:
   pnpm 11 an unanswered build script is `ERR_PNPM_IGNORED_BUILDS`, a hard error rather than a
   warning, so this has to be answered one way or the other.
 - **`minimumReleaseAgeExclude`** carves out the 24-hour quarantine pnpm 11 applies to newly
-  published packages. `wrangler` and `miniflare` are exempt **by name, not by version**: this site
-  runs on Cloudflare, so the deploy tooling should track whatever their platform is currently on,
-  and holding it back a day to satisfy a generic heuristic trades a real compatibility risk for a
+  published packages. Cloudflare's tooling is exempt **by name, not by version**: this site runs on
+  Cloudflare, so the deploy tooling should track whatever their platform is currently on, and
+  holding it back a day to satisfy a generic heuristic trades a real compatibility risk for a
   notional one. Version-pinned entries would lapse on every upgrade and need re-adding, which is
-  the opposite of tracking latest. Everything else still goes through the full quarantine.
+  the opposite of tracking latest.
 
-  `vue-tsc` is pinned to an exact version rather than exempted, because a caret range resolves to
-  the newest release and only then gets checked against the policy. Loosen it back to a range once
-  the current release has aged past the window.
+  The list covers the whole family, not just the top-level package — `wrangler`, plus `miniflare`
+  (its local runtime), `workerd` (the runtime binary) and the `@cloudflare/*` glob, which picks up
+  `kv-asset-handler`, `unenv-preset` and the five per-platform `workerd` builds. They ship on one
+  cadence, so exempting `wrangler` alone would still fail an install on whichever transitive
+  sibling came out the same day. Everything else still goes through the full quarantine.
+
+  `vue-tsc` is pinned to an exact version rather than exempted. A caret range resolves to the
+  newest release and only then gets checked against the policy, so a same-day `vue-tsc` release
+  fails the install even though the pinned version would have been fine. It is not Cloudflare
+  tooling and has no reason to track latest, so the pin stays; bump it deliberately.
 
 Nothing here needs configuring per machine: `pnpm-workspace.yaml` is committed, and pnpm reads the
 `packageManager` field and switches itself to the pinned version, so an existing local pnpm needs no
