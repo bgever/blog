@@ -18,8 +18,10 @@ listed in [LICENSE-CONTENT](LICENSE-CONTENT). Clear those separately if you reus
 ## Local development
 
 Requires [fnm](https://github.com/Schniz/fnm) (or any Node version manager honouring `.nvmrc`) and
-[pnpm](https://pnpm.io). **npm and yarn are blocked** by a `preinstall` guard — the lockfile is
-pnpm's and mixing package managers breaks it.
+[pnpm 11](https://pnpm.io), pinned by the `packageManager` field so Corepack, CI and Cloudflare all
+use the same version. **npm and yarn are blocked** by a `preinstall` guard — the lockfile is pnpm's
+and mixing package managers breaks it. `.npmrc` sets `engine-strict=true`, so the `engines` field is
+enforced rather than advisory and an older Node fails the install instead of the build.
 
 ```sh
 fnm use          # Node 24, from .nvmrc
@@ -111,6 +113,21 @@ A few decisions worth knowing before you change something:
   fallback and emits it with an empty body, since it cannot know the requested path at build time.
   Cloudflare serves that file directly for every unmatched URL, so anything not executing
   JavaScript would get a blank page. `buildEnd` renames the rendered `not-found.html` over it.
+
+### pnpm settings live in `pnpm-workspace.yaml`
+
+Not in a `pnpm` block in `package.json` — pnpm 11 ignores that block silently, so configuring it
+there looks correct and changes nothing. Two settings matter:
+
+- **`allowBuilds`** decides which dependencies may run install scripts. `esbuild` and `workerd` are
+  set to `false`: both ship their real binaries as per-platform optional dependencies, so the
+  postinstall is unnecessary, and everything — build, tests, `wrangler dev` — works without it. The
+  practical effect is that a plain `pnpm install` runs no third-party install scripts at all. In
+  pnpm 11 an unanswered build script is `ERR_PNPM_IGNORED_BUILDS`, a hard error rather than a
+  warning, so this has to be answered one way or the other.
+- **`minimumReleaseAgeExclude`** carves out the 24-hour quarantine pnpm 11 applies to newly
+  published packages. The entries are version-pinned, so an exemption evaporates as soon as that
+  package is upgraded. Prune them when these dependencies are next updated.
 
 ### Dependencies deliberately held back
 

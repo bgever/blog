@@ -1,0 +1,26 @@
+# pnpm 11 reads build-script and supply-chain settings from here, NOT from a
+# "pnpm" block in package.json — that block is silently ignored, which is how
+# ERR_PNPM_IGNORED_BUILDS keeps firing if you configure it in the wrong place.
+
+# Dependencies whose install scripts may run. Both ship their real binaries as
+# per-platform optional dependencies, so the postinstall is not needed: the
+# build, the tests and `wrangler dev` all work with these blocked. Keeping them
+# false means no third-party install script runs on `pnpm install`.
+allowBuilds:
+  esbuild: false
+  workerd: false
+
+# pnpm 11 refuses packages published within the last 24 hours — a hedge against
+# installing a compromised release before anyone has noticed it. These four were
+# published the day this project was set up and are allow-listed deliberately;
+# `wrangler` is the one that matters, and `miniflare` comes with it, just as
+# `@vue/language-core` comes with `vue-tsc`.
+#
+# The entries are version-pinned, so they stop applying the moment any of these
+# is upgraded — there is no standing exemption for the package, only for the
+# exact release that was audited. Prune them when they are next updated.
+minimumReleaseAgeExclude:
+  - '@vue/language-core@3.3.9'
+  - miniflare@5.20260730.0-alpha
+  - vue-tsc@3.3.9
+  - wrangler@4.118.0
