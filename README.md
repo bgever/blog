@@ -114,52 +114,6 @@ A few decisions worth knowing before you change something:
   Cloudflare serves that file directly for every unmatched URL, so anything not executing
   JavaScript would get a blank page. `buildEnd` renames the rendered `not-found.html` over it.
 
-### pnpm settings live in `pnpm-workspace.yaml`
-
-Not in a `pnpm` block in `package.json` — pnpm 11 ignores that block silently, so configuring it
-there looks correct and changes nothing. Two settings matter:
-
-- **`allowBuilds`** decides which dependencies may run install scripts. `esbuild` and `workerd` are
-  set to `false`: both ship their real binaries as per-platform optional dependencies, so the
-  postinstall is unnecessary, and everything — build, tests, `wrangler dev` — works without it. The
-  practical effect is that a plain `pnpm install` runs no third-party install scripts at all. In
-  pnpm 11 an unanswered build script is `ERR_PNPM_IGNORED_BUILDS`, a hard error rather than a
-  warning, so this has to be answered one way or the other.
-- **`minimumReleaseAgeExclude`** carves out the 24-hour quarantine pnpm 11 applies to newly
-  published packages. Cloudflare's tooling is exempt **by name, not by version**: this site runs on
-  Cloudflare, so the deploy tooling should track whatever their platform is currently on, and
-  holding it back a day to satisfy a generic heuristic trades a real compatibility risk for a
-  notional one. Version-pinned entries would lapse on every upgrade and need re-adding, which is
-  the opposite of tracking latest.
-
-  The list covers the whole family, not just the top-level package — `wrangler`, plus `miniflare`
-  (its local runtime), `workerd` (the runtime binary) and the `@cloudflare/*` glob, which picks up
-  `kv-asset-handler`, `unenv-preset` and the five per-platform `workerd` builds. They ship on one
-  cadence, so exempting `wrangler` alone would still fail an install on whichever transitive
-  sibling came out the same day. Everything else still goes through the full quarantine.
-
-  `vue-tsc` is pinned to an exact version rather than exempted. A caret range resolves to the
-  newest release and only then gets checked against the policy, so a same-day `vue-tsc` release
-  fails the install even though the pinned version would have been fine. It is not Cloudflare
-  tooling and has no reason to track latest, so the pin stays; bump it deliberately.
-
-Nothing here needs configuring per machine: `pnpm-workspace.yaml` is committed, and pnpm reads the
-`packageManager` field and switches itself to the pinned version, so an existing local pnpm needs no
-manual upgrade.
-
-### Dependencies deliberately held back
-
-Two majors are pinned on purpose; `pnpm outdated` will keep offering them.
-
-- **`@types/node` tracks the Node major**, not latest. The runtime is Node 24, so the types stay on
-  24 — typing against a newer Node would let the compiler accept APIs the runtime does not have.
-- **`typescript` stays on 6.x.** TypeScript 7 (the native port) restructured its package exports and
-  `vue-tsc` cannot resolve it: `ERR_PACKAGE_PATH_NOT_EXPORTED`. TypeScript 6 is the last JS-based
-  release and works, so the project sits there — which also means TS 7's stricter rules already
-  apply. `shims.d.ts` exists because of one of them: TS 6 reports TS2882 for the theme's
-  side-effect `import './styles/main.css'` unless the module is declared. Revisit 7 when `vue-tsc`
-  supports it.
-
 ## Deployment
 
 Pushes to `main` are built and deployed automatically by **Cloudflare Workers Builds**. GitHub
@@ -205,9 +159,6 @@ These steps are done once, in the Cloudflare dashboard — they are not in this 
 
 4. **Enable Web Analytics.** Analytics &amp; Logs → Web Analytics → add `bgever.com`. Because the
    zone is proxied this needs no script tag, which is why there is no analytics code here.
-
-5. **Cut DNS over from Netlify**, then delete the Netlify site once `bgever.com` resolves to
-   Cloudflare and the site is verified.
 
 ### Redirects
 
