@@ -118,8 +118,12 @@ Two majors are pinned on purpose; `pnpm outdated` will keep offering them.
 
 - **`@types/node` tracks the Node major**, not latest. The runtime is Node 24, so the types stay on
   24 — typing against a newer Node would let the compiler accept APIs the runtime does not have.
-- **`typescript` stays on 5.x.** TypeScript 7 (the native port) restructured its package exports and
-  `vue-tsc` cannot resolve it: `ERR_PACKAGE_PATH_NOT_EXPORTED`. Revisit when vue-tsc supports it.
+- **`typescript` stays on 6.x.** TypeScript 7 (the native port) restructured its package exports and
+  `vue-tsc` cannot resolve it: `ERR_PACKAGE_PATH_NOT_EXPORTED`. TypeScript 6 is the last JS-based
+  release and works, so the project sits there — which also means TS 7's stricter rules already
+  apply. `shims.d.ts` exists because of one of them: TS 6 reports TS2882 for the theme's
+  side-effect `import './styles/main.css'` unless the module is declared. Revisit 7 when `vue-tsc`
+  supports it.
 
 ## Deployment
 
