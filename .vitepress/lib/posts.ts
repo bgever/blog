@@ -166,17 +166,43 @@ export function extractExcerpt(html: string, rawMarkdown: string): string {
  * Wikipedia-style `..._(disambiguation)` targets do not end mid-link.
  * Emphasis handles `*` only — `_` is too common inside identifiers to strip
  * safely with a regex.
+ *
+ * Code spans come out first and go back in last, so the passes in between
+ * cannot reach inside them: `` `*glob*` `` is a literal shell pattern, not
+ * emphasis, and matching the delimiter run by length keeps a span like
+ * ``` ``a ` b`` ``` from ending at the backtick it is meant to contain.
  */
 function stripInlineMarkdown(markdown: string): string {
   const url = String.raw`\((?:[^()]|\([^()]*\))*\)`
-  return markdown
-    .replace(new RegExp(String.raw`!\[[^\]]*\]${url}`, 'g'), '')
-    .replace(/!\[[^\]]*\]\[[^\]]*\]/g, '')
-    .replace(new RegExp(String.raw`\[([^\]]*)\]${url}`, 'g'), '$1')
-    .replace(/\[([^\]]*)\]\[[^\]]*\]/g, '$1')
-    .replace(/^[ \t]*\[[^\]]+\]:[ \t]*\S+.*$/gm, '')
-    .replace(/`+([^`]+)`+/g, '$1')
-    .replace(/(\*{1,3})(?=\S)([\s\S]*?\S)\1/g, '$2')
+  const code: string[] = []
+  return (
+    markdown
+      .replace(/\u0000/g, '')
+      .replace(/(`+)([\s\S]*?)\1(?!`)/g, (_match, _ticks, content: string) =>
+        placeholder(code.push(content) - 1),
+      )
+      .replace(new RegExp(String.raw`!\[[^\]]*\]${url}`, 'g'), '')
+      .replace(/!\[[^\]]*\]\[[^\]]*\]/g, '')
+      .replace(new RegExp(String.raw`\[([^\]]*)\]${url}`, 'g'), '$1')
+      .replace(/\[([^\]]*)\]\[[^\]]*\]/g, '$1')
+      // A definition's title may sit on the next line, indented; drop it with
+      // the definition or the card shows a bare `"Docs title"`.
+      .replace(
+        /^[ \t]*\[[^\]]+\]:[ \t]*\S+.*(?:\n[ \t]+(?:"[^"]*"|'[^']*'|\([^)]*\))[ \t]*)?$/gm,
+        '',
+      )
+      .replace(/(\*{1,3})(?=\S)([\s\S]*?\S)\1/g, '$2')
+      .replace(/\u0000(\d+)\u0000/g, (_match, index: string) => code[Number(index)] ?? '')
+  )
+}
+
+/**
+ * Stands in for a code span while the other passes run. The NUL sentinel is
+ * stripped from the source before any span is lifted, so nothing written in a
+ * post can impersonate a placeholder and pull in someone else's code.
+ */
+function placeholder(index: number): string {
+  return `\u0000${index}\u0000`
 }
 
 function toPlainText(input: string): string {

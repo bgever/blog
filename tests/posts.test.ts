@@ -120,11 +120,34 @@ describe('extractExcerpt', () => {
     expect(extractExcerpt('', md)).toBe('Read the docs first.')
   })
 
+  it('drops a definition title carried onto the next line', () => {
+    const md = 'Read the [docs][d] first.\n\n[d]: /docs\n    "Docs title"\n\n<!-- more -->'
+    const excerpt = extractExcerpt('', md)
+    expect(excerpt).toBe('Read the docs first.')
+    expect(excerpt).not.toContain('Docs title')
+  })
+
   // The rendered branch gets this free by stripping <code> and <em>; the
   // marker branch has to do it by hand or the card shows the punctuation.
   it('unwraps inline code and emphasis', () => {
     const md = 'Mock the `Auth0Client` **before** you *test* it.\n\n<!-- more -->'
     expect(extractExcerpt('', md)).toBe('Mock the Auth0Client before you test it.')
+  })
+
+  // A code span is literal text: its asterisks are shell syntax, not emphasis.
+  it('leaves emphasis markers inside a code span alone', () => {
+    const md = 'Match with `*glob*` patterns.\n\n<!-- more -->'
+    expect(extractExcerpt('', md)).toBe('Match with *glob* patterns.')
+  })
+
+  it('unwraps a code span that contains a backtick', () => {
+    const md = 'Type ``a ` b`` to escape it.\n\n<!-- more -->'
+    expect(extractExcerpt('', md)).toBe('Type a ` b to escape it.')
+  })
+
+  it('leaves bare numbers in prose alone', () => {
+    const md = 'It took `npm` 3 tries across 0 machines.\n\n<!-- more -->'
+    expect(extractExcerpt('', md)).toBe('It took npm 3 tries across 0 machines.')
   })
 
   it('leaves underscores inside identifiers alone', () => {
