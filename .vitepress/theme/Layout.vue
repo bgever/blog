@@ -23,6 +23,10 @@ const layouts = {
   tags: TagsLayout,
   tag: TagLayout,
   page: PageLayout,
+  // src/404.md uses this so dist/404.html is server-rendered. VitePress emits
+  // an empty JS shell for its built-in 404, which Cloudflare would then serve
+  // as a blank page to anything that does not execute JavaScript.
+  notfound: NotFound,
 } as const
 
 const current = computed(() => {

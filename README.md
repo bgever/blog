@@ -107,6 +107,19 @@ A few decisions worth knowing before you change something:
   twenty lines plus a postbuild step.
 - **No analytics code.** Cloudflare Web Analytics is enabled from the dashboard, so there is no
   beacon script, no cookie and nothing to consent to.
+- **The 404 page is built from `src/not-found.md`.** VitePress treats `404.html` as the SPA
+  fallback and emits it with an empty body, since it cannot know the requested path at build time.
+  Cloudflare serves that file directly for every unmatched URL, so anything not executing
+  JavaScript would get a blank page. `buildEnd` renames the rendered `not-found.html` over it.
+
+### Dependencies deliberately held back
+
+Two majors are pinned on purpose; `pnpm outdated` will keep offering them.
+
+- **`@types/node` tracks the Node major**, not latest. The runtime is Node 24, so the types stay on
+  24 — typing against a newer Node would let the compiler accept APIs the runtime does not have.
+- **`typescript` stays on 5.x.** TypeScript 7 (the native port) restructured its package exports and
+  `vue-tsc` cannot resolve it: `ERR_PACKAGE_PATH_NOT_EXPORTED`. Revisit when vue-tsc supports it.
 
 ## Deployment
 

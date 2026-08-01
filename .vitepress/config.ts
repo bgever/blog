@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { SITE } from './site'
 import { headForPage, isPostPage } from './head'
-import { writeFeed } from './rss'
+import { writeFeed, writeRenderedNotFound } from './rss'
 import { readPosts } from './lib/read-posts'
 
 /**
@@ -33,6 +33,9 @@ export default defineConfig({
     // and sorted so the file has a stable diff between builds.
     transformItems: (items) =>
       items
+        // The 404 page is not a destination; buildEnd renames not-found.html
+        // to 404.html, so neither name belongs in the sitemap.
+        .filter((item) => !/(^|\/)(404|not-found)(\.html)?$/.test(item.url))
         .map((item) => ({ ...item, url: item.url.replace(/\/+$/, '') }))
         .sort((a, b) => a.url.localeCompare(b.url)),
   },
@@ -91,5 +94,6 @@ export default defineConfig({
 
   async buildEnd(config) {
     await writeFeed(config)
+    writeRenderedNotFound(config.outDir)
   },
 })

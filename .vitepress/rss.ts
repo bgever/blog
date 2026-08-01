@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs'
+import { copyFileSync, rmSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { Feed } from 'feed'
 import { createContentLoader, type SiteConfig } from 'vitepress'
@@ -68,6 +68,22 @@ export async function writeFeed(config: SiteConfig): Promise<void> {
     })
 
   writeFileSync(path.join(config.outDir, 'rss.xml'), feed.rss2(), 'utf-8')
+}
+
+/**
+ * Replaces VitePress' 404.html with a server-rendered one.
+ *
+ * VitePress treats `404.html` as the SPA fallback and emits it with an empty
+ * body — it cannot know the requested path at build time, so the content is
+ * left to hydrate client-side. Cloudflare serves that file directly for every
+ * unmatched URL, so anything that does not run JavaScript would get a blank
+ * page. `src/not-found.md` renders the same component through the normal
+ * pipeline; this swaps it in and drops the duplicate route.
+ */
+export function writeRenderedNotFound(outDir: string): void {
+  const rendered = path.join(outDir, 'not-found.html')
+  copyFileSync(rendered, path.join(outDir, '404.html'))
+  rmSync(rendered)
 }
 
 /** Rewrites root-relative `src`/`href` attributes to absolute URLs. */
