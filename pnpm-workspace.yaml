@@ -1,0 +1,34 @@
+# pnpm 11 reads build-script and supply-chain settings from here, NOT from a
+# "pnpm" block in package.json — that block is silently ignored, which is how
+# ERR_PNPM_IGNORED_BUILDS keeps firing if you configure it in the wrong place.
+
+# Dependencies whose install scripts may run. Both ship their real binaries as
+# per-platform optional dependencies, so the postinstall is not needed: the
+# build, the tests and `wrangler dev` all work with these blocked. Keeping them
+# false means no third-party install script runs on `pnpm install`.
+allowBuilds:
+  esbuild: false
+  workerd: false
+
+# pnpm 11 refuses packages published within the last 24 hours — a hedge against
+# installing a compromised release before anyone has noticed it.
+#
+# Cloudflare's own tooling is exempt. This site runs on Cloudflare, so the deploy
+# tooling should track whatever their platform is currently on; holding it back a
+# day to satisfy a generic supply-chain heuristic trades a real compatibility risk
+# for a notional one. `wrangler` pulls the rest in lockstep: `miniflare` is its
+# local runtime, `workerd` the runtime binary, and `@cloudflare/*` covers
+# kv-asset-handler, unenv-preset and the five per-platform workerd builds — all
+# released on the same cadence, so exempting only the top-level package would
+# still fail the install on its transitive siblings.
+#
+# Entries are matched by name and the glob is a real pattern, verified by forcing
+# every package into quarantine and counting violations. Nothing is pinned to a
+# version deliberately: a pinned entry would lapse on every upgrade and have to be
+# re-added, which is the opposite of tracking latest. Everything not listed here
+# still goes through the full 24-hour quarantine.
+minimumReleaseAgeExclude:
+  - miniflare
+  - wrangler
+  - workerd
+  - '@cloudflare/*'

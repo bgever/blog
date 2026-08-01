@@ -1,4 +1,8 @@
-_site/
 node_modules/
-package-lock.json
+dist/
+.vitepress/cache/
+.wrangler/
+*.log
 .DS_Store
+.env
+.env.*

@@ -1,0 +1,266 @@
+/*
+ * Hand-rolled prose styles for rendered Markdown.
+ *
+ * Sizes are `em` relative to `.prose` (1.0625rem), so the whole article scales
+ * with the 18px root. Body is the system serif, headings the system sans — the
+ * contrast gives long-form text its own voice without loading a webfont.
+ */
+
+.prose {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.72;
+  color: var(--c-ink);
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  text-wrap: balance;
+  scroll-margin-top: 5rem;
+}
+
+.prose h2 {
+  font-size: 1.4118em;
+  line-height: 1.25;
+  letter-spacing: -0.018em;
+  margin: 1.55em 0 0;
+}
+
+.prose h3 {
+  font-size: 1.1176em;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  margin: 1.5em 0 0;
+}
+
+.prose h4 {
+  font-size: 1em;
+  margin: 1.4em 0 0;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 1em 0 0;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.3em;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li {
+  margin: 0.35em 0;
+}
+
+.prose li::marker {
+  color: var(--c-muted);
+}
+
+.prose a {
+  color: var(--c-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+  text-decoration-thickness: 0.06em;
+}
+
+.prose a:hover {
+  text-decoration-thickness: 0.12em;
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose blockquote {
+  margin: 1.3em 0 0;
+  padding: 0.2em 0 0.2em 1.05em;
+  border-left: 3px solid var(--c-accent);
+  color: var(--c-muted);
+  font-style: italic;
+}
+
+.prose blockquote p {
+  margin: 0;
+}
+
+.prose hr {
+  margin: 2em 0 0;
+  border: 0;
+  border-top: 1px solid var(--c-border);
+}
+
+.prose img {
+  border-radius: 0.5em;
+  margin: 1.5em 0 0;
+}
+
+.prose figure {
+  margin: 1.5em 0 0;
+}
+
+.prose figcaption {
+  font-family: var(--font-sans);
+  font-size: 0.7647em;
+  color: var(--c-muted);
+  margin-top: 0.5em;
+}
+
+/* Anchor links on headings — visible on hover, and on keyboard focus. */
+.prose .header-anchor {
+  float: left;
+  margin-left: -0.75em;
+  padding-right: 0.25em;
+  font-weight: 400;
+  color: var(--c-muted);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.prose h2:hover .header-anchor,
+.prose h3:hover .header-anchor,
+.prose h4:hover .header-anchor,
+.prose .header-anchor:focus-visible {
+  opacity: 1;
+}
+
+/* Inline code and fenced blocks. Shiki supplies the token colors; these rules
+   only handle the container so light/dark surfaces match the rest of the page. */
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 0.25em;
+  padding: 0.08em 0.32em;
+  word-break: break-word;
+}
+
+.prose div[class*='language-'] {
+  position: relative;
+  margin: 1.2em 0 0;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 0.5em;
+  overflow: hidden;
+}
+
+.prose div[class*='language-'] > span.lang {
+  position: absolute;
+  top: 0.5em;
+  right: 0.75em;
+  font-family: var(--font-sans);
+  font-size: 0.65em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.prose div[class*='language-']:hover > span.lang {
+  opacity: 0;
+}
+
+.prose pre {
+  margin: 0;
+  padding: 1em 1.05em;
+  overflow-x: auto;
+  background: transparent !important;
+}
+
+.prose pre code {
+  font-family: var(--font-mono);
+  font-size: 0.8235em;
+  line-height: 1.6;
+  background: none;
+  border: 0;
+  padding: 0;
+  display: block;
+  width: fit-content;
+  min-width: 100%;
+}
+
+/* Shiki emits both themes; show the one matching the current appearance. */
+.prose .shiki span {
+  color: var(--shiki-light);
+}
+
+.dark .prose .shiki span {
+  color: var(--shiki-dark);
+}
+
+/* Copy button, injected by CopyCode.vue */
+.prose div[class*='language-'] > button.copy {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--c-border);
+  border-radius: 0.35em;
+  background: var(--c-bg);
+  color: var(--c-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease;
+}
+
+.prose div[class*='language-']:hover > button.copy,
+.prose div[class*='language-'] > button.copy:focus-visible {
+  opacity: 1;
+}
+
+.prose div[class*='language-'] > button.copy:hover {
+  color: var(--c-accent);
+  border-color: var(--c-accent);
+}
+
+.prose div[class*='language-'] > button.copy[data-copied='true'] {
+  color: var(--c-accent);
+  border-color: var(--c-accent);
+}
+
+/* Tables — rare in these posts, but they must not blow out the column. */
+.prose table {
+  width: 100%;
+  margin: 1.3em 0 0;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.85em;
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 0.45em 0.7em 0.45em 0;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.prose th {
+  font-weight: 600;
+}

@@ -1,0 +1,108 @@
+@import 'tailwindcss';
+@import './prose.css';
+
+/*
+ * Dark mode is driven by a `.dark` class on <html>, which VitePress toggles and
+ * persists (localStorage key `vitepress-theme-appearance`) and restores with an
+ * inline script before first paint, so there is no flash.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Ink & Amber — light. Warm paper ground, ink text, amber accent. */
+  --color-bg: #faf9f6;
+  --color-surface: #ffffff;
+  --color-border: #e7e3da;
+  --color-ink: #1a1917;
+  --color-muted: #6b665c;
+  --color-accent: #b45309;
+
+  /* Ink & Amber — dark. Warm near-black rather than a neutral gray, so it
+     stays in the same family as the cream. Accent lifts to hold contrast. */
+  --color-bg-dark: #12110f;
+  --color-surface-dark: #1b1a17;
+  --color-border-dark: #2e2c27;
+  --color-ink-dark: #edeae3;
+  --color-muted-dark: #a29b8e;
+  --color-accent-dark: #fbbf24;
+
+  /* System stacks — no webfonts, so nothing to download and no layout shift. */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Prose column and the sticky table of contents beside it. The TOC only
+     appears when both side tracks fit, keeping the prose column centered. */
+  --measure: 38rem;
+  --toc-width: 13rem;
+  --toc-breakpoint: 1200px;
+}
+
+/*
+ * Runtime tokens. Components reference these, never the raw palette above, so
+ * the whole theme switches by redefining six values.
+ */
+:root {
+  --c-bg: var(--color-bg);
+  --c-surface: var(--color-surface);
+  --c-border: var(--color-border);
+  --c-ink: var(--color-ink);
+  --c-muted: var(--color-muted);
+  --c-accent: var(--color-accent);
+
+  /* 18px base, as chosen. Everything else in the theme is a ratio of this. */
+  font-size: 18px;
+  color-scheme: light;
+}
+
+.dark {
+  --c-bg: var(--color-bg-dark);
+  --c-surface: var(--color-surface-dark);
+  --c-border: var(--color-border-dark);
+  --c-ink: var(--color-ink-dark);
+  --c-muted: var(--color-muted-dark);
+  --c-accent: var(--color-accent-dark);
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--c-bg);
+    color: var(--c-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--c-accent) 22%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

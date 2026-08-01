@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bgever-blog",
+  "main": "worker/index.ts",
+  "compatibility_date": "2025-01-01",
+
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Serve /2021/hello-world-again from 2021/hello-world-again.html and
+    // 301 the old trailing-slash form to it.
+    "html_handling": "auto-trailing-slash",
+    // Unmatched paths fall through to the Worker, which handles the redirect
+    // table and then serves the themed 404 page.
+    "not_found_handling": "404-page",
+  },
+
+  // Apex is canonical. `www` is redirected by a Cloudflare Redirect Rule, not
+  // by this Worker — see README, "Manual Cloudflare setup".
+  "routes": [
+    {
+      "pattern": "bgever.com",
+      "custom_domain": true,
+    },
+  ],
+
+  "observability": {
+    "enabled": true,
+  },
+}
