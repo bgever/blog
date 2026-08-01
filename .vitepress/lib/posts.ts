@@ -148,10 +148,35 @@ export function extractExcerpt(html: string, rawMarkdown: string): string {
   const hasMore = /<!--\s*more\s*-->/.test(rawMarkdown)
   if (hasMore) {
     const [before] = rawMarkdown.split(/<!--\s*more\s*-->/)
-    return toPlainText(before ?? '').trim()
+    return toPlainText(stripInlineMarkdown(before ?? '')).trim()
   }
   const match = html.match(/<p>([\s\S]*?)<\/p>/)
   return toPlainText(match?.[1] ?? '').trim()
+}
+
+/**
+ * Reduces inline markdown to the text a reader is meant to see, so the
+ * `<!-- more -->` branch (which reads unrendered markdown) matches what the
+ * first-paragraph branch gets for free from the rendered HTML. Without it a
+ * card shows the literal `[Auth0](https://auth0.com/)` — a URL nobody can
+ * click in a blurb. Images drop out completely: alt text describes a picture
+ * the card does not show.
+ *
+ * The URL pattern tolerates one level of nested parentheses so that
+ * Wikipedia-style `..._(disambiguation)` targets do not end mid-link.
+ * Emphasis handles `*` only — `_` is too common inside identifiers to strip
+ * safely with a regex.
+ */
+function stripInlineMarkdown(markdown: string): string {
+  const url = String.raw`\((?:[^()]|\([^()]*\))*\)`
+  return markdown
+    .replace(new RegExp(String.raw`!\[[^\]]*\]${url}`, 'g'), '')
+    .replace(/!\[[^\]]*\]\[[^\]]*\]/g, '')
+    .replace(new RegExp(String.raw`\[([^\]]*)\]${url}`, 'g'), '$1')
+    .replace(/\[([^\]]*)\]\[[^\]]*\]/g, '$1')
+    .replace(/^[ \t]*\[[^\]]+\]:[ \t]*\S+.*$/gm, '')
+    .replace(/`+([^`]+)`+/g, '$1')
+    .replace(/(\*{1,3})(?=\S)([\s\S]*?\S)\1/g, '$2')
 }
 
 function toPlainText(input: string): string {

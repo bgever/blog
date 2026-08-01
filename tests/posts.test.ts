@@ -101,6 +101,41 @@ describe('extractExcerpt', () => {
       'A bold & brave claim.',
     )
   })
+
+  // The marker branch reads raw markdown, so link syntax reached the card
+  // verbatim: "[Auth0](https://auth0.com/), the authentication service...".
+  it('keeps only the display text of markdown links', () => {
+    const md = '[Auth0](https://auth0.com/) has an [SDK](/docs/sdk).\n\n<!-- more -->\n\nRest.'
+    expect(extractExcerpt('', md)).toBe('Auth0 has an SDK.')
+  })
+
+  it('keeps link text when the URL itself contains parentheses', () => {
+    const md =
+      'See [Scope](https://en.wikipedia.org/wiki/Scope_(computer_science)).\n\n<!-- more -->'
+    expect(extractExcerpt('', md)).toBe('See Scope.')
+  })
+
+  it('resolves reference-style links and drops their definitions', () => {
+    const md = 'Read the [docs][d] first.\n\n[d]: https://example.com/docs\n\n<!-- more -->'
+    expect(extractExcerpt('', md)).toBe('Read the docs first.')
+  })
+
+  // The rendered branch gets this free by stripping <code> and <em>; the
+  // marker branch has to do it by hand or the card shows the punctuation.
+  it('unwraps inline code and emphasis', () => {
+    const md = 'Mock the `Auth0Client` **before** you *test* it.\n\n<!-- more -->'
+    expect(extractExcerpt('', md)).toBe('Mock the Auth0Client before you test it.')
+  })
+
+  it('leaves underscores inside identifiers alone', () => {
+    const md = 'Set client_id and redirect_uri.\n\n<!-- more -->'
+    expect(extractExcerpt('', md)).toBe('Set client_id and redirect_uri.')
+  })
+
+  it('drops images rather than surfacing their alt text', () => {
+    const md = 'Before. ![A chart of nothing](/covers/x.webp) After.\n\n<!-- more -->'
+    expect(extractExcerpt('', md)).toBe('Before. After.')
+  })
 })
 
 describe('byDateDesc', () => {
