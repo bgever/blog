@@ -4,6 +4,7 @@ import { Content, useData } from 'vitepress'
 import { formatDate, normalizeDate } from '../../lib/posts'
 import TagChips from '../components/TagChips.vue'
 import TableOfContents from '../components/TableOfContents.vue'
+import PostEnd from '../components/PostEnd.vue'
 import PostNav from '../components/PostNav.vue'
 
 const { page, frontmatter } = useData()
@@ -66,6 +67,8 @@ const url = computed(
       <div class="prose mt-8">
         <Content />
       </div>
+
+      <PostEnd />
 
       <PostNav :url="url" />
     </article>
