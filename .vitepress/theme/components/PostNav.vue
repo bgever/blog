@@ -11,11 +11,11 @@ const newer = computed(() => (index.value > 0 ? posts[index.value - 1] : undefin
 </script>
 
 <template>
-  <nav
-    v-if="older || newer"
-    class="mt-12 grid gap-3 border-t border-[var(--c-border)] pt-6 sm:grid-cols-2"
-    aria-label="More posts"
-  >
+  <!--
+    No rule along the top: PostEnd already draws the line between the post and
+    what follows it, and its bottom margin supplies the gap this used to.
+  -->
+  <nav v-if="older || newer" class="grid gap-3 sm:grid-cols-2" aria-label="More posts">
     <a
       v-if="older"
       :href="older.url"
