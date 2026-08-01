@@ -126,8 +126,17 @@ there looks correct and changes nothing. Two settings matter:
   pnpm 11 an unanswered build script is `ERR_PNPM_IGNORED_BUILDS`, a hard error rather than a
   warning, so this has to be answered one way or the other.
 - **`minimumReleaseAgeExclude`** carves out the 24-hour quarantine pnpm 11 applies to newly
-  published packages. The entries are version-pinned, so an exemption evaporates as soon as that
-  package is upgraded. Prune them when these dependencies are next updated.
+  published packages. Only `wrangler` is exempted, plus `miniflare`, which is wrangler's own local
+  runtime and ships in lockstep with it. The entries are version-pinned, so an exemption evaporates
+  as soon as that package is upgraded. Prune them when these dependencies are next updated.
+
+  `vue-tsc` is pinned to an exact version rather than exempted, because a caret range resolves to
+  the newest release and only then gets checked against the policy. Loosen it back to a range once
+  the current release has aged past the window.
+
+Nothing here needs configuring per machine: `pnpm-workspace.yaml` is committed, and pnpm reads the
+`packageManager` field and switches itself to the pinned version, so an existing local pnpm needs no
+manual upgrade.
 
 ### Dependencies deliberately held back
 

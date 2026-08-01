@@ -11,16 +11,18 @@ allowBuilds:
   workerd: false
 
 # pnpm 11 refuses packages published within the last 24 hours — a hedge against
-# installing a compromised release before anyone has noticed it. These four were
-# published the day this project was set up and are allow-listed deliberately;
-# `wrangler` is the one that matters, and `miniflare` comes with it, just as
-# `@vue/language-core` comes with `vue-tsc`.
+# installing a compromised release before anyone has noticed it.
 #
-# The entries are version-pinned, so they stop applying the moment any of these
-# is upgraded — there is no standing exemption for the package, only for the
-# exact release that was audited. Prune them when they are next updated.
+# Only wrangler is exempted. `miniflare` is not a separate decision: it is
+# wrangler's own local runtime, published in lockstep, so exempting wrangler
+# without it is not possible short of downgrading wrangler itself.
+#
+# Both entries are version-pinned, so each exemption disappears the moment that
+# package is upgraded — there is no standing exemption for wrangler, only for
+# the release that was audited. Prune them at the next dependency bump.
+#
+# Nothing else is listed: vue-tsc is pinned to a release old enough to satisfy
+# the policy on its own rather than being waved through.
 minimumReleaseAgeExclude:
-  - '@vue/language-core@3.3.9'
   - miniflare@5.20260730.0-alpha
-  - vue-tsc@3.3.9
   - wrangler@4.118.0
