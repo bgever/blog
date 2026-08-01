@@ -2,8 +2,8 @@ import { createContentLoader } from 'vitepress'
 import {
   byDateDesc,
   extractExcerpt,
-  normaliseDate,
-  normalisePostUrl,
+  normalizeDate,
+  normalizePostUrl,
   validateFrontmatter,
   type Post,
 } from './lib/posts'
@@ -23,11 +23,11 @@ export default createContentLoader('posts/**/*.md', {
       return {
         // The loader does not apply `rewrites`, so its URLs still carry the
         // /posts/ prefix that the served routes do not have.
-        url: normalisePostUrl(page.url),
+        url: normalizePostUrl(page.url),
         title: fm.title,
         description: fm.description,
         date: fm.date,
-        updated: fm.updated ? normaliseDate(fm.updated) : null,
+        updated: fm.updated ? normalizeDate(fm.updated) : null,
         tags: fm.tags ?? [],
         cover: fm.cover ?? null,
         coverAlt: fm.coverAlt ?? null,

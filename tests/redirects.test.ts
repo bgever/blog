@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import worker, { isGone, normalisePath, resolveRedirect, type Env } from '../worker/index'
+import worker, { isGone, normalizePath, resolveRedirect, type Env } from '../worker/index'
 
 const ORIGIN = 'https://bgever.com'
 const url = (path: string) => new URL(path, ORIGIN)
@@ -20,13 +20,13 @@ function makeEnv(): Env {
   }
 }
 
-describe('normalisePath', () => {
+describe('normalizePath', () => {
   it('drops a trailing slash', () => {
-    expect(normalisePath('/blog/')).toBe('/blog')
+    expect(normalizePath('/blog/')).toBe('/blog')
   })
 
   it('leaves the root alone', () => {
-    expect(normalisePath('/')).toBe('/')
+    expect(normalizePath('/')).toBe('/')
   })
 })
 

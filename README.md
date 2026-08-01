@@ -4,20 +4,20 @@ Personal blog of Bart Verkoeijen. [VitePress](https://vitepress.dev) v1 with a c
 [Tailwind CSS](https://tailwindcss.com) v4, deployed to [Cloudflare
 Workers](https://developers.cloudflare.com/workers/) with static assets.
 
-## Licence
+## License
 
-Two licences, deliberately:
+Two licenses, deliberately:
 
 - **Code** — [MIT](LICENSE). Copyright (c) 2021-2026 Bart Verkoeijen.
 - **Content** — [CC BY-NC-SA 4.0](LICENSE-CONTENT). The writing and Bart's own images.
 
 Third-party images (post covers licensed from Unsplash and elsewhere) are **not** covered by the
-content licence. Each is credited on its post through the `coverSource` frontmatter field and
+content license. Each is credited on its post through the `coverSource` frontmatter field and
 listed in [LICENSE-CONTENT](LICENSE-CONTENT). Clear those separately if you reuse anything.
 
 ## Local development
 
-Requires [fnm](https://github.com/Schniz/fnm) (or any Node version manager honouring `.nvmrc`) and
+Requires [fnm](https://github.com/Schniz/fnm) (or any Node version manager honoring `.nvmrc`) and
 [pnpm 11](https://pnpm.io), pinned by the `packageManager` field so Corepack, CI and Cloudflare all
 use the same version. **npm and yarn are blocked** by a `preinstall` guard — the lockfile is pnpm's
 and mixing package managers breaks it. `.npmrc` sets `engine-strict=true`, so the `engines` field is
@@ -74,7 +74,7 @@ to extend it.
 
 ## How it is put together
 
-```
+```txt
 .vitepress/
   config.ts          VitePress config: rewrites, sitemap, head, hooks
   site.ts            Single source of truth for site identity and links
@@ -104,7 +104,7 @@ A few decisions worth knowing before you change something:
   theme needs headers in `pageData` for the table of contents to exist at all.
 - **Dynamic route `paths()` run before the config resolves**, so `createContentLoader` is
   unavailable there. `src/tags/[tag].paths.ts` reads frontmatter off disk via `lib/read-posts.ts`.
-- **No search.** With one post it would be theatre. When the archive justifies it,
+- **No search.** With one post it would be theater. When the archive justifies it,
   [Pagefind](https://pagefind.app) is the intended path: a build-time index and a drop-in UI, about
   twenty lines plus a postbuild step.
 - **No analytics code.** Cloudflare Web Analytics is enabled from the dashboard, so there is no

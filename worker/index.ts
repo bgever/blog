@@ -37,7 +37,7 @@ export const REDIRECTS: Record<string, string> = {
 export const GONE_PREFIXES: string[] = ['/admin']
 
 /** Strips a trailing slash so `/blog/` matches the same rule as `/blog`. */
-export function normalisePath(pathname: string): string {
+export function normalizePath(pathname: string): string {
   if (pathname.length > 1 && pathname.endsWith('/')) return pathname.slice(0, -1)
   return pathname
 }
@@ -47,14 +47,14 @@ export function normalisePath(pathname: string): string {
  * Exported so the redirect table can be tested without a Worker runtime.
  */
 export function resolveRedirect(url: URL): string | null {
-  const path = normalisePath(url.pathname)
+  const path = normalizePath(url.pathname)
   const target = REDIRECTS[path]
   if (!target) return null
   return new URL(target + url.search, url.origin).toString()
 }
 
 export function isGone(url: URL): boolean {
-  const path = normalisePath(url.pathname)
+  const path = normalizePath(url.pathname)
   return GONE_PREFIXES.some((prefix) => path === prefix || path.startsWith(prefix + '/'))
 }
 

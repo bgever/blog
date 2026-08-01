@@ -17,7 +17,7 @@
   --color-muted: #6b665c;
   --color-accent: #b45309;
 
-  /* Ink & Amber — dark. Warm near-black rather than a neutral grey, so it
+  /* Ink & Amber — dark. Warm near-black rather than a neutral gray, so it
      stays in the same family as the cream. Accent lifts to hold contrast. */
   --color-bg-dark: #12110f;
   --color-surface-dark: #1b1a17;
@@ -33,7 +33,7 @@
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   /* Prose column and the sticky table of contents beside it. The TOC only
-     appears when both side tracks fit, keeping the prose column centred. */
+     appears when both side tracks fit, keeping the prose column centered. */
   --measure: 38rem;
   --toc-width: 13rem;
   --toc-breakpoint: 1200px;

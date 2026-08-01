@@ -7,7 +7,7 @@ import { SITE } from '../../site'
  * Sticky table of contents shown in the right-hand track on wide viewports.
  *
  * The parent grid keeps a matching empty track on the left, so the prose column
- * stays centred whether or not this renders. Below the breakpoint the whole
+ * stays centered whether or not this renders. Below the breakpoint the whole
  * thing is display:none — there is no inline fallback by design.
  */
 const { page } = useData()

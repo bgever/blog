@@ -52,12 +52,12 @@ export function validateFrontmatter(file: string, fm: Partial<PostFrontmatter>):
     }
   }
 
-  const date = normaliseDate(fm.date)
+  const date = normalizeDate(fm.date)
   if (!date) {
     throw new PostError(file, '`date` is required and must be a YYYY-MM-DD date')
   }
 
-  if (fm.updated !== undefined && !normaliseDate(fm.updated)) {
+  if (fm.updated !== undefined && !normalizeDate(fm.updated)) {
     throw new PostError(file, '`updated` must be a YYYY-MM-DD date when present')
   }
 
@@ -86,7 +86,7 @@ export function validateFrontmatter(file: string, fm: Partial<PostFrontmatter>):
  * Accepts a `YYYY-MM-DD` string or a Date (js-yaml parses unquoted dates into
  * Date objects) and returns `YYYY-MM-DD`, or null if it is neither.
  */
-export function normaliseDate(value: unknown): string | null {
+export function normalizeDate(value: unknown): string | null {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
     return value.toISOString().slice(0, 10)
   }
@@ -105,7 +105,7 @@ export function normaliseDate(value: unknown): string | null {
  * `/2021/hello-world-again`. Every listing link must pass through this or it
  * 404s in production.
  */
-export function normalisePostUrl(loaderUrl: string): string {
+export function normalizePostUrl(loaderUrl: string): string {
   return loaderUrl.replace(/^\/posts\//, '/')
 }
 

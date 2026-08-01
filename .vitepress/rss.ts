@@ -3,7 +3,7 @@ import path from 'node:path'
 import { Feed } from 'feed'
 import { createContentLoader, type SiteConfig } from 'vitepress'
 import { SITE } from './site'
-import { byDateDesc, normaliseDate, validateFrontmatter, type Post } from './lib/posts'
+import { byDateDesc, normalizeDate, validateFrontmatter, type Post } from './lib/posts'
 import { urlForPage } from './head'
 
 /**
@@ -21,7 +21,7 @@ export async function writeFeed(config: SiteConfig): Promise<void> {
     link: SITE.origin,
     language: SITE.lang,
     favicon: `${SITE.origin}/favicon.png`,
-    copyright: `Content licensed ${SITE.licence.content.name} — ${SITE.name}`,
+    copyright: `Content licensed ${SITE.license.content.name} — ${SITE.name}`,
     feedLinks: { rss: `${SITE.origin}/rss.xml` },
     author: { name: SITE.name, link: SITE.origin },
   })
@@ -42,10 +42,10 @@ export async function writeFeed(config: SiteConfig): Promise<void> {
       title: fm.title,
       description: fm.description,
       date: fm.date,
-      updated: fm.updated ? normaliseDate(fm.updated) : null,
+      updated: fm.updated ? normalizeDate(fm.updated) : null,
       tags: fm.tags ?? [],
       cover: fm.cover ?? null,
-      html: absolutise(page.html ?? ''),
+      html: absolutize(page.html ?? ''),
     }))
 
   posts
@@ -87,7 +87,7 @@ export function writeRenderedNotFound(outDir: string): void {
 }
 
 /** Rewrites root-relative `src`/`href` attributes to absolute URLs. */
-function absolutise(html: string): string {
+function absolutize(html: string): string {
   return html.replace(/(\s(?:src|href))="\/(?!\/)/g, `$1="${SITE.origin}/`)
 }
 

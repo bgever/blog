@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Content, useData } from 'vitepress'
-import { formatDate, normaliseDate } from '../../lib/posts'
+import { formatDate, normalizeDate } from '../../lib/posts'
 import TagChips from '../components/TagChips.vue'
 import TableOfContents from '../components/TableOfContents.vue'
 import PostNav from '../components/PostNav.vue'
 
 const { page, frontmatter } = useData()
 
-const date = computed(() => normaliseDate(frontmatter.value.date))
-const updated = computed(() => normaliseDate(frontmatter.value.updated))
+const date = computed(() => normalizeDate(frontmatter.value.date))
+const updated = computed(() => normalizeDate(frontmatter.value.updated))
 const tags = computed<string[]>(() =>
   Array.isArray(frontmatter.value.tags) ? frontmatter.value.tags : [],
 )
@@ -21,7 +21,7 @@ const url = computed(
 <template>
   <!--
     Three tracks: an empty spacer, the prose column, then the table of contents.
-    The spacer is what keeps the prose centred once the TOC appears.
+    The spacer is what keeps the prose centered once the TOC appears.
   -->
   <div class="post-grid mx-auto grid w-full justify-center gap-8 px-6 py-[1.9rem]">
     <div class="post-grid__spacer" aria-hidden="true"></div>

@@ -3,8 +3,8 @@ import {
   byDateDesc,
   extractExcerpt,
   formatDate,
-  normaliseDate,
-  normalisePostUrl,
+  normalizeDate,
+  normalizePostUrl,
   tagSlug,
   validateFrontmatter,
   type Post,
@@ -55,17 +55,17 @@ describe('validateFrontmatter', () => {
   })
 })
 
-describe('normaliseDate', () => {
+describe('normalizeDate', () => {
   it('passes through an ISO date', () => {
-    expect(normaliseDate('2021-07-03')).toBe('2021-07-03')
+    expect(normalizeDate('2021-07-03')).toBe('2021-07-03')
   })
 
   it('accepts a Date, as YAML produces for unquoted dates', () => {
-    expect(normaliseDate(new Date('2021-07-03T03:31:10.231Z'))).toBe('2021-07-03')
+    expect(normalizeDate(new Date('2021-07-03T03:31:10.231Z'))).toBe('2021-07-03')
   })
 
   it('returns null for nonsense', () => {
-    expect(normaliseDate('not a date')).toBeNull()
+    expect(normalizeDate('not a date')).toBeNull()
   })
 })
 
@@ -91,7 +91,7 @@ describe('extractExcerpt', () => {
     expect(extractExcerpt(html, 'First para.\n\nSecond para.')).toBe('First para.')
   })
 
-  it('honours an explicit <!-- more --> marker', () => {
+  it('honors an explicit <!-- more --> marker', () => {
     const md = 'Lead in.\n\nStill the lead.\n\n<!-- more -->\n\nThe rest.'
     expect(extractExcerpt('<p>Lead in.</p>', md)).toBe('Lead in. Still the lead.')
   })
@@ -113,16 +113,16 @@ describe('byDateDesc', () => {
   })
 })
 
-describe('normalisePostUrl', () => {
+describe('normalizePostUrl', () => {
   // createContentLoader does not apply the config's `rewrites`, so loader URLs
   // carry a /posts/ prefix that the served routes do not. Regression guard for
   // the bug where every listing link pointed at a 404ing /posts/... URL.
   it.each([
     ['/posts/2021/hello-world-again', '/2021/hello-world-again'],
     ['/posts/2026/some-post', '/2026/some-post'],
-    ['/2021/already-normalised', '/2021/already-normalised'],
+    ['/2021/already-normalized', '/2021/already-normalized'],
   ])('maps %s to %s', (input, expected) => {
-    expect(normalisePostUrl(input)).toBe(expected)
+    expect(normalizePostUrl(input)).toBe(expected)
   })
 })
 
@@ -159,7 +159,7 @@ describe('the posts actually in this repo', () => {
     // readPosts validates as it reads; reaching here means every file passed.
     for (const post of posts) {
       expect(post.frontmatter.title).toBeTruthy()
-      expect(normaliseDate(post.frontmatter.date)).not.toBeNull()
+      expect(normalizeDate(post.frontmatter.date)).not.toBeNull()
     }
   })
 

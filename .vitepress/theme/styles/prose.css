@@ -144,7 +144,7 @@
   opacity: 1;
 }
 
-/* Inline code and fenced blocks. Shiki supplies the token colours; these rules
+/* Inline code and fenced blocks. Shiki supplies the token colors; these rules
    only handle the container so light/dark surfaces match the rest of the page. */
 .prose :not(pre) > code {
   font-family: var(--font-mono);

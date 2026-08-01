@@ -1,6 +1,6 @@
 import type { HeadConfig, PageData } from 'vitepress'
 import { SITE } from './site'
-import { normaliseDate } from './lib/posts'
+import { normalizeDate } from './lib/posts'
 
 const abs = (path: string) => new URL(path, SITE.origin).href
 
@@ -85,7 +85,7 @@ function jsonLd(pageData: PageData, url: string, image: string): Record<string, 
   }
 
   if (isPostPage(pageData)) {
-    const published = normaliseDate(fm.date)
+    const published = normalizeDate(fm.date)
     return {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -94,12 +94,12 @@ function jsonLd(pageData: PageData, url: string, image: string): Record<string, 
       image,
       url,
       datePublished: published,
-      dateModified: normaliseDate(fm.updated) ?? published,
+      dateModified: normalizeDate(fm.updated) ?? published,
       author,
       publisher: author,
       keywords: Array.isArray(fm.tags) ? fm.tags.join(', ') : undefined,
       mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-      license: SITE.licence.content.url,
+      license: SITE.license.content.url,
     }
   }
 

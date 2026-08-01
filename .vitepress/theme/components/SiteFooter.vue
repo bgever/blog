@@ -22,25 +22,25 @@ import { SITE } from '../../site'
       <p>
         Content licensed
         <a
-          :href="SITE.licence.content.url"
+          :href="SITE.license.content.url"
           rel="license noopener"
           class="text-[var(--c-accent)] underline underline-offset-2"
         >
-          {{ SITE.licence.content.name }}
+          {{ SITE.license.content.name }}
         </a>
         · Code licensed
         <a
-          :href="SITE.licence.code.url"
+          :href="SITE.license.code.url"
           class="text-[var(--c-accent)] underline underline-offset-2"
         >
-          {{ SITE.licence.code.name }}
+          {{ SITE.license.code.name }}
         </a>
         ·
         <a :href="SITE.repo" class="text-[var(--c-accent)] underline underline-offset-2">
           Source on GitHub
         </a>
       </p>
-      <p>Third-party images are credited individually and are not covered by that licence.</p>
+      <p>Third-party images are credited individually and are not covered by that license.</p>
     </div>
   </footer>
 </template>
