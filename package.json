@@ -25,7 +25,7 @@
     "test": "vitest run",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deploy": "pnpm build && wrangler deploy"
+    "deploy:worker": "pnpm build && wrangler deploy"
   },
   "repository": {
     "type": "git",

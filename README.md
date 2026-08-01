@@ -36,7 +36,10 @@ pnpm dev         # http://localhost:5173
 | `pnpm typecheck`        | `vue-tsc --noEmit`.                                             |
 | `pnpm format`           | Prettier, including Tailwind class sorting.                     |
 | `pnpm new-post "Title"` | Scaffold a post with complete frontmatter.                      |
-| `pnpm deploy`           | Build and `wrangler deploy`. Normally unnecessary — see below.  |
+| `pnpm deploy:worker`    | Build and `wrangler deploy`. Normally unnecessary — see below.  |
+
+The deploy script is **not** called `deploy`: `pnpm deploy` is a reserved pnpm built-in (workspace
+deploy) and would shadow the script rather than run it.
 
 ## Writing a post
 
@@ -120,10 +123,19 @@ These steps are done once, in the Cloudflare dashboard — they are not in this 
    | Setting           | Value                                               |
    | ----------------- | --------------------------------------------------- |
    | Build command     | `pnpm build`                                        |
-   | Deploy command    | `npx wrangler deploy`                               |
+   | Deploy command    | `pnpm exec wrangler deploy`                         |
    | Root directory    | `/`                                                 |
    | Node version      | `24` (or add `NODE_VERSION=24` as a build variable) |
    | Production branch | `main`                                              |
+
+   Workers Builds picks the package manager from the lockfile, so `pnpm-lock.yaml` gets it pnpm,
+   at the version pinned in `packageManager`. Cloudflare's defaults are `npm run build` and
+   `npx wrangler deploy` — replace both. `npx wrangler` would in fact work (it resolves the local
+   binary from `node_modules/.bin`), but it silently falls back to fetching wrangler from the
+   registry if that binary is ever missing, where `pnpm exec` fails loudly instead.
+
+   If Workers Builds ever does run `npm install`, the `preinstall` guard fails the build with an
+   explicit "use pnpm" error rather than quietly producing a second lockfile.
 
 2. **Point the apex domain at the Worker.** Settings → Domains &amp; Routes → add `bgever.com` as a
    custom domain. Cloudflare creates the proxied DNS record itself.
