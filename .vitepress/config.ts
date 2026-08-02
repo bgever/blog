@@ -71,6 +71,9 @@ export default defineConfig({
     // The default theme derives its outline client-side; a custom theme needs
     // headers in pageData, which is what the table of contents reads.
     headers: { level: [2, 3] },
+    // Sentence case, like every other label on the site. This is the copy
+    // button's only accessible name — VitePress gives it no text content.
+    codeCopyButtonTitle: 'Copy code',
   },
 
   transformPageData(pageData) {
