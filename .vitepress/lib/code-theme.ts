@@ -2,11 +2,10 @@
  * Syntax highlighting colours, raised to a readable contrast.
  *
  * A Shiki theme is authored against its own editor background, and the page
- * paints `--c-surface` instead — close, but not the same colour, and a token
- * that cleared the bar in VS Code can land under it here. GitHub's dark theme
- * is written for #0d1117 and shows up on the warmer #1b1a17; its light theme
- * assumes white and gets it, yet still puts comments at 4.55:1, under the
- * 4.5:1 WCAG AA threshold once you want any margin at all.
+ * paints `--c-surface` instead — close, but not the same colour, so a token
+ * that cleared the bar in VS Code can land under it here. Vitesse is soft to
+ * begin with and lands well under: comments at 2.34:1 on the light surface,
+ * brackets at 3.03:1 on the dark one, against a 4.5:1 WCAG AA threshold.
  *
  * So rather than trust the theme, the colours are checked against the surface
  * they actually land on: each one keeps its hue, and only those short of the
@@ -18,11 +17,23 @@
 export const CODE_SURFACE = { light: '#ffffff', dark: '#1b1a17' } as const
 
 /**
- * The contrast floor every token has to clear. Set a step past the 4.5:1 AA
- * asks for body text: at exactly AA the faint tokens are still the faint ones,
- * and the point of this is that none of them read as an afterthought.
+ * The contrast floor every token has to clear, per appearance. Both are well
+ * past the 4.5:1 WCAG AA asks for body text — clearing the bar is not the same
+ * as being comfortable to read, and at AA Vitesse's faint tokens are still the
+ * faint ones.
+ *
+ * The two differ because the surfaces do. Pure white is unforgiving: every
+ * step of floor on the light side drags the whole palette darker, and past 6:1
+ * Vitesse stops reading as itself. The dark surface is a warm near-black with
+ * more headroom above it, so 7:1 lifts the brackets and comments that needed
+ * it without flattening the rest.
+ *
+ * Even so this is a heavy hand — roughly four fifths of the palette is
+ * rewritten either way, so much of what ships is this module's arithmetic
+ * rather than the theme author's eye. Lower a side if its blocks ever start to
+ * read as louder than the prose around them.
  */
-export const MIN_CONTRAST = 5.5
+export const MIN_CONTRAST = { light: 6, dark: 7 } as const
 
 interface Rgb {
   r: number
@@ -167,9 +178,11 @@ function walkLightness(
 
 /**
  * Returns `color` unchanged when it already clears `minRatio` against `bg`,
- * otherwise the nearest colour of the same hue that does.
+ * otherwise the nearest colour of the same hue that does. The floor is passed
+ * in rather than defaulted — the two appearances use different ones, and a
+ * default is just a chance to silently apply the wrong side's.
  */
-export function raiseContrast(color: string, bg: string, minRatio = MIN_CONTRAST): string {
+export function raiseContrast(color: string, bg: string, minRatio: number): string {
   const parsed = parseHex(color)
   const surface = parseHex(bg)
   if (!parsed || !surface) return color
@@ -199,11 +212,7 @@ export function raiseContrast(color: string, bg: string, minRatio = MIN_CONTRAST
  * The theme's own `bg` is left alone — the page paints `--c-surface` behind
  * the block, and that is the colour these ratios are measured against.
  */
-export function withMinimumContrast(
-  theme: RawTheme,
-  bg: string,
-  minRatio = MIN_CONTRAST,
-): RawTheme {
+export function withMinimumContrast(theme: RawTheme, bg: string, minRatio: number): RawTheme {
   const lift = (color: string | undefined) =>
     color === undefined ? undefined : raiseContrast(color, bg, minRatio)
 

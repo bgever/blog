@@ -43,40 +43,49 @@ function foregrounds(theme: RawTheme, surface: string): { color: string; behind:
 
 describe('raiseContrast', () => {
   it('leaves a colour that already passes untouched', () => {
-    // GitHub's light foreground: 15.4:1 on white.
-    expect(raiseContrast('#1f2328', '#ffffff')).toBe('#1f2328')
+    // Vitesse's light foreground: 11.5:1 on white.
+    expect(raiseContrast('#393a34', '#ffffff', MIN_CONTRAST.light)).toBe('#393a34')
   })
 
   it('darkens a faint colour on a light surface', () => {
-    // GitHub's comment grey: 4.55:1 on white, the closest call in that theme.
-    const fixed = raiseContrast('#6e7781', '#ffffff')
-    expect(contrast(fixed, '#ffffff')).toBeGreaterThanOrEqual(MIN_CONTRAST)
-    expect(contrast(fixed, '#ffffff')).toBeGreaterThan(contrast('#6e7781', '#ffffff'))
+    // Vitesse's comment green: 2.34:1 on white, the faintest colour it has.
+    const fixed = raiseContrast('#a0ada0', '#ffffff', MIN_CONTRAST.light)
+    expect(contrast(fixed, '#ffffff')).toBeGreaterThanOrEqual(MIN_CONTRAST.light)
+    expect(contrast(fixed, '#ffffff')).toBeGreaterThan(contrast('#a0ada0', '#ffffff'))
   })
 
   it('lightens a faint colour on a dark surface', () => {
-    // A mid grey: 3.03:1 on the dark surface.
-    const fixed = raiseContrast('#666666', CODE_SURFACE.dark)
-    expect(contrast(fixed, CODE_SURFACE.dark)).toBeGreaterThanOrEqual(MIN_CONTRAST)
+    // Vitesse's bracket grey: 3.03:1 on the dark surface.
+    const fixed = raiseContrast('#666666', CODE_SURFACE.dark, MIN_CONTRAST.dark)
+    expect(contrast(fixed, CODE_SURFACE.dark)).toBeGreaterThanOrEqual(MIN_CONTRAST.dark)
+  })
+
+  it('honours the floor it is handed, not a default', () => {
+    // The same colour and surface, one detent apart.
+    const six = raiseContrast('#a0ada0', '#ffffff', 6)
+    const seven = raiseContrast('#a0ada0', '#ffffff', 7)
+    expect(contrast(six, '#ffffff')).toBeGreaterThanOrEqual(6)
+    expect(contrast(six, '#ffffff')).toBeLessThan(7)
+    expect(contrast(seven, '#ffffff')).toBeGreaterThanOrEqual(7)
   })
 
   it('measures a translucent colour as it lands on the surface', () => {
-    // 40% grey composites to a mid grey on white: 3.02:1, so it gets darkened.
-    const fixed = raiseContrast('#393a3466', '#ffffff')
+    // Vitesse's markdown link grey is 56% opaque: 3.02:1 once it hits white.
+    const fixed = raiseContrast('#393a3490', '#ffffff', MIN_CONTRAST.light)
     expect(fixed).toHaveLength(7)
-    expect(contrast(fixed, '#ffffff')).toBeGreaterThanOrEqual(MIN_CONTRAST)
-    // Translucent but still 11.5:1, so it is left exactly as the theme wrote it.
-    expect(raiseContrast('#dbd7caee', CODE_SURFACE.dark)).toBe('#dbd7caee')
+    expect(contrast(fixed, '#ffffff')).toBeGreaterThanOrEqual(MIN_CONTRAST.light)
+    // Translucent but still 12:1, so it is left exactly as the theme wrote it.
+    expect(raiseContrast('#dbd7caee', CODE_SURFACE.dark, MIN_CONTRAST.dark)).toBe('#dbd7caee')
   })
 
   it('keeps the hue when no lightness clears the bar', () => {
-    // A mid-tone background this saturated leaves no room at either end.
-    expect(raiseContrast('#ffab70', '#c24e00')).toBe('#ffab70')
+    // Vitesse's own diff background leaves no room at either end.
+    expect(raiseContrast('#ffab70', '#c24e00', MIN_CONTRAST.dark)).toBe('#ffab70')
   })
 
   it('keeps the hue it was given', () => {
-    // GitHub's orange stays orange rather than drifting toward a neutral.
-    const fixed = raiseContrast('#953800', '#ffffff', 8)
+    // Vitesse's orange stays orange rather than drifting toward a neutral.
+    const fixed = raiseContrast('#b07d48', '#ffffff', MIN_CONTRAST.light)
     const [r, g, b] = [1, 3, 5].map((i) => parseInt(fixed.slice(i, i + 2), 16))
     expect(r).toBeGreaterThan(g!)
     expect(g).toBeGreaterThan(b!)
@@ -94,7 +103,7 @@ describe('codeThemes', () => {
       expect(colors.length).toBeGreaterThan(10)
       for (const { color } of colors) {
         expect(contrast(color, surface), `${color} (${appearance})`).toBeGreaterThanOrEqual(
-          MIN_CONTRAST,
+          MIN_CONTRAST[appearance],
         )
       }
     }
@@ -103,7 +112,7 @@ describe('codeThemes', () => {
   it('is a strict improvement — no token loses contrast, none is touched needlessly', async () => {
     for (const appearance of ['light', 'dark'] as const) {
       const surface = CODE_SURFACE[appearance]
-      const base = (await bundledThemes[`github-${appearance}-default`]()).default as RawTheme
+      const base = (await bundledThemes[`vitesse-${appearance}`]()).default as RawTheme
       const before = foregrounds(base, surface)
       const after = foregrounds((await codeThemes())[appearance], surface)
 
@@ -114,36 +123,31 @@ describe('codeThemes', () => {
         )
       })
 
-      // Only the colours that fell short are rewritten; the rest are GitHub's.
+      // Only the colours that fell short are rewritten; the rest are Vitesse's.
       const changed = before.filter((o, i) => o.color !== after[i]!.color)
       for (const { color, behind } of changed) {
-        expect(contrast(color, behind)).toBeLessThan(MIN_CONTRAST)
+        expect(contrast(color, behind)).toBeLessThan(MIN_CONTRAST[appearance])
       }
     }
   })
 
-  it('has something to fix on the light surface and nothing on the dark one', async () => {
-    // Not a property of the correction so much as a record of what the chosen
-    // pair needs: GitHub's dark theme already clears the floor on `--c-surface`,
-    // its light theme leaves comments and a few keywords just short. If a theme
-    // swap or a surface tweak changes that, this is where it shows up.
-    const themes = await codeThemes()
-    const shortfall = async (appearance: 'light' | 'dark') => {
-      const surface = CODE_SURFACE[appearance]
-      const base = (await bundledThemes[`github-${appearance}-default`]()).default as RawTheme
-      return foregrounds(base, surface).filter(
-        ({ color, behind }) => behind === surface && contrast(color, surface) < MIN_CONTRAST,
-      ).length
-    }
+  it('applies each appearance its own floor, not the other one', async () => {
+    // The two sides sit one detent apart, so a theme corrected against the
+    // wrong floor would still look plausible. This is what catches that: the
+    // dark surface has to clear 7:1, and the light one has to have colours
+    // that sit between 6:1 and 7:1 — which is only possible at the lower floor.
+    expect(MIN_CONTRAST.light).toBeLessThan(MIN_CONTRAST.dark)
 
-    expect(await shortfall('dark')).toBe(0)
-    expect(await shortfall('light')).toBeGreaterThan(0)
-    for (const appearance of ['light', 'dark'] as const) {
-      const surface = CODE_SURFACE[appearance]
-      for (const { color, behind } of foregrounds(themes[appearance], surface)) {
-        if (behind === surface)
-          expect(contrast(color, surface)).toBeGreaterThanOrEqual(MIN_CONTRAST)
-      }
-    }
+    const themes = await codeThemes()
+    const onSurface = (appearance: 'light' | 'dark') =>
+      foregrounds(themes[appearance], CODE_SURFACE[appearance])
+        .filter(({ behind }) => behind === CODE_SURFACE[appearance])
+        .map(({ color }) => contrast(color, CODE_SURFACE[appearance]))
+
+    const light = onSurface('light')
+    expect(Math.min(...light)).toBeGreaterThanOrEqual(MIN_CONTRAST.light)
+    expect(light.some((r) => r < MIN_CONTRAST.dark)).toBe(true)
+
+    expect(Math.min(...onSurface('dark'))).toBeGreaterThanOrEqual(MIN_CONTRAST.dark)
   })
 })
