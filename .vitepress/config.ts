@@ -3,6 +3,7 @@ import { SITE } from './site'
 import { headForPage, isPostPage } from './head'
 import { writeFeed, writeRenderedNotFound } from './rss'
 import { readPosts } from './lib/read-posts'
+import { codeThemes } from './lib/highlight'
 
 /**
  * Filtering drafts out of the content loader hides them from listings and
@@ -66,7 +67,7 @@ export default defineConfig({
   ],
 
   markdown: {
-    theme: { light: 'vitesse-light', dark: 'vitesse-dark' },
+    theme: await codeThemes(),
     // The default theme derives its outline client-side; a custom theme needs
     // headers in pageData, which is what the table of contents reads.
     headers: { level: [2, 3] },
