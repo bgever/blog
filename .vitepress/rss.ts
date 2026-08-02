@@ -45,7 +45,7 @@ export async function writeFeed(config: SiteConfig): Promise<void> {
       updated: fm.updated ? normalizeDate(fm.updated) : null,
       tags: fm.tags ?? [],
       cover: fm.cover ?? null,
-      html: absolutize(page.html ?? ''),
+      html: absolutize(stripCopyButtons(page.html ?? '')),
     }))
 
   posts
@@ -84,6 +84,17 @@ export function writeRenderedNotFound(outDir: string): void {
   const rendered = path.join(outDir, 'not-found.html')
   copyFileSync(rendered, path.join(outDir, '404.html'))
   rmSync(rendered)
+}
+
+/**
+ * Drops the copy button VitePress injects into every code block.
+ *
+ * It is empty markup that only works with the site's stylesheet and click
+ * handler, neither of which a feed reader loads, so it can only render as a
+ * stray box beside the code.
+ */
+function stripCopyButtons(html: string): string {
+  return html.replace(/<button\b[^>]*\bclass="copy"[^>]*><\/button>/g, '')
 }
 
 /** Rewrites root-relative `src`/`href` attributes to absolute URLs. */
