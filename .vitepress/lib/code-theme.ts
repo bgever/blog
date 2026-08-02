@@ -1,16 +1,17 @@
 /**
  * Syntax highlighting colours, raised to a readable contrast.
  *
- * Vitesse is deliberately soft, and several of its token colours land under
- * the 4.5:1 WCAG AA threshold against the code-block surface — comments sit
- * at 2.3:1 on the light surface, punctuation at 3.0:1 on the dark one. At the
- * ~15px the code blocks render at, that reads as washed out in both
- * appearances.
+ * A Shiki theme is authored against its own editor background, and the page
+ * paints `--c-surface` instead — close, but not the same colour, and a token
+ * that cleared the bar in VS Code can land under it here. GitHub's dark theme
+ * is written for #0d1117 and shows up on the warmer #1b1a17; its light theme
+ * assumes white and gets it, yet still puts comments at 4.55:1, under the
+ * 4.5:1 WCAG AA threshold once you want any margin at all.
  *
- * Swapping themes wholesale would fix the numbers but pull a foreign palette
- * into Ink & Amber, so instead every token colour keeps its hue and only the
- * under-contrast ones are pushed — darker on the light surface, lighter on
- * the dark one — until they clear the floor below.
+ * So rather than trust the theme, the colours are checked against the surface
+ * they actually land on: each one keeps its hue, and only those short of the
+ * floor are pushed — darker on the light surface, lighter on the dark one —
+ * until they clear it. This holds for whichever pair `highlight.ts` names.
  */
 
 /** Background the code actually sits on: `--c-surface` in either appearance. */
