@@ -45,7 +45,7 @@ export async function writeFeed(config: SiteConfig): Promise<void> {
       updated: fm.updated ? normalizeDate(fm.updated) : null,
       tags: fm.tags ?? [],
       cover: fm.cover ?? null,
-      html: absolutize(page.html ?? ''),
+      html: absolutize(stripCodeBlockChrome(page.html ?? '')),
     }))
 
   posts
@@ -84,6 +84,21 @@ export function writeRenderedNotFound(outDir: string): void {
   const rendered = path.join(outDir, 'not-found.html')
   copyFileSync(rendered, path.join(outDir, '404.html'))
   rmSync(rendered)
+}
+
+/**
+ * Drops the chrome VitePress injects into every code block: the copy button
+ * and the language label.
+ *
+ * Both are positioned over the block by the site's stylesheet, which a feed
+ * reader does not load. Without it the button is a stray empty box — its click
+ * handler is not there either — and the label renders as a loose word above
+ * the code.
+ */
+function stripCodeBlockChrome(html: string): string {
+  return html
+    .replace(/<button\b[^>]*\bclass="copy"[^>]*><\/button>/g, '')
+    .replace(/<span class="lang">[^<]*<\/span>/g, '')
 }
 
 /** Rewrites root-relative `src`/`href` attributes to absolute URLs. */

@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useData } from 'vitepress'
 import SiteHeader from './components/SiteHeader.vue'
 import SiteFooter from './components/SiteFooter.vue'
-import CopyCode from './components/CopyCode.vue'
 import NotFound from './NotFound.vue'
 import HomeLayout from './layouts/HomeLayout.vue'
 import PostLayout from './layouts/PostLayout.vue'
@@ -48,6 +47,5 @@ const current = computed(() => {
       <component :is="current" v-else />
     </main>
     <SiteFooter />
-    <CopyCode />
   </div>
 </template>
